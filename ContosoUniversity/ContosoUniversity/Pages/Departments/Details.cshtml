@@ -1,0 +1,27 @@
+﻿@page "{id:int}"
+@model Departments.Details
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Department</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt asp-display-name-for="Data.Name"></dt>
+        <dd asp-display-for="Data.Name"></dd>
+        <dt asp-display-name-for="Data.Budget"></dt>
+        <dd asp-display-for="Data.Budget"></dd>
+        <dt asp-display-name-for="Data.StartDate"></dt>
+        <dd asp-display-for="Data.StartDate"></dd>
+        <dt asp-display-name-for="Data.AdministratorFullName"></dt>
+        <dd asp-display-for="Data.AdministratorFullName"></dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="Edit" asp-route-id="@Model.Data.Id">Edit</a> |
+    <a asp-page="Index">Back to List</a>
+</div>

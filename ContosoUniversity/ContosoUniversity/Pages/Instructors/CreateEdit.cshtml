@@ -1,0 +1,79 @@
+﻿@page "{handler?}"
+@model Instructors.CreateEdit
+
+@{
+    ViewBag.Title = Model.Data.Id == null ? "Create" : "Edit";
+}
+
+<h2>@(Model.Data.Id == null ? "Create" : "Edit")</h2>
+
+<h4>Instructor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input asp-for="Data.Id" type="hidden"/>
+            <div class="form-group">
+                <label asp-for="Data.LastName" class="control-label"></label>
+                <input asp-for="Data.LastName" class="form-control" />
+                <span asp-validation-for="Data.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Data.FirstMidName" class="control-label"></label>
+                <input asp-for="Data.FirstMidName" class="form-control" />
+                <span asp-validation-for="Data.FirstMidName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Data.HireDate" class="control-label"></label>
+                <input asp-for="Data.HireDate" class="form-control" />
+                <span asp-validation-for="Data.HireDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Data.OfficeAssignmentLocation" class="control-label"></label>
+                <input asp-for="Data.OfficeAssignmentLocation" class="form-control" />
+                <span asp-validation-for="Data.OfficeAssignmentLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <table>
+                        <tr>
+                        @{
+                            int cnt = 0;
+
+                            foreach (var course in Model.Data.AssignedCourses)
+                            {
+                                if (cnt++ % 3 == 0)
+                                {
+                                    @:</tr><tr>
+                                }
+                                @:<td>
+                                <label style="font-weight: normal">
+                                    <input type="checkbox"
+                                           name="data.selectedCourses"
+                                           value="@course.CourseId"
+                                           @(Html.Raw(course.Assigned ? "checked=\"checked\"" : "")) />
+                                    @course.CourseId :  @course.Title
+                                </label>
+                                @:</td>
+                            }
+                            @:</tr>
+                        }
+
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial"/>
+}

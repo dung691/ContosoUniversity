@@ -1,0 +1,104 @@
+﻿@page
+@model Instructors.Index
+
+@{
+    ViewData["Title"] = "Instructors";
+}
+
+<h2>Instructors</h2>
+
+<p>
+    <a asp-page="CreateEdit" asp-page-handler="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th asp-display-name-for="Data.Instructors[0].LastName"></th>
+            <th asp-display-name-for="Data.Instructors[0].FirstMidName"></th>
+            <th asp-display-name-for="Data.Instructors[0].HireDate"></th>
+            <th asp-display-name-for="Data.Instructors[0].OfficeAssignmentLocation"></th>
+            <th asp-display-name-for="Data.Instructors[0].CourseAssignments"></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Data.Instructors)
+        {
+            string selectedRow = "";
+            if (item.Id == Model.Data.InstructorId)
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
+                <td asp-display-for="@item.LastName"></td>
+                <td asp-display-for="@item.FirstMidName"></td>
+                <td asp-display-for="@item.HireDate"></td>
+                <td asp-display-for="@item.OfficeAssignmentLocation"></td>
+                <td>
+                    @{
+                        foreach (var course in item.CourseAssignments)
+                        {
+                            @course.CourseId @:  @course.CourseTitle <br />
+                        }
+                    }
+                </td>
+                <td>
+                    <a asp-page="Index" asp-route-id="@item.Id">Select</a> |
+                    <a asp-page="CreateEdit" asp-page-handler="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Data.Courses.Any())
+{
+    <h3>Courses Taught by Selected Instructor</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th asp-display-name-for="Data.Courses[0].Id"></th>
+            <th asp-display-name-for="Data.Courses[0].Title"></th>
+            <th asp-display-name-for="Data.Courses[0].DepartmentName"></th>
+        </tr>
+
+        @foreach (var item in Model.Data.Courses)
+        {
+            string selectedRow = "";
+            if (item.Id == Model.Data.CourseId)
+            {
+                selectedRow = "table-success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    <a asp-page="Index" asp-route-id="@Model.Data.InstructorId" asp-route-courseID="@item.Id">Select</a>
+                </td>
+                <td asp-display-for="@item.Id"></td>
+                <td asp-display-for="@item.Title"></td>
+                <td asp-display-for="@item.DepartmentName"></td>
+            </tr>
+        }
+
+    </table>
+}
+@if (Model.Data.Enrollments.Any())
+{
+    <h3>
+        Students Enrolled in Selected Course
+    </h3>
+    <table class="table">
+        <tr>
+            <th asp-display-name-for="Data.Enrollments[0].StudentFullName"></th>
+            <th asp-display-name-for="Data.Enrollments[0].Grade"></th>
+        </tr>
+        @foreach (var item in Model.Data.Enrollments)
+        {
+            <tr>
+                <td asp-display-for="@item.StudentFullName"></td>
+                <td asp-display-for="@item.Grade"></td>
+            </tr>
+        }
+    </table>
+}

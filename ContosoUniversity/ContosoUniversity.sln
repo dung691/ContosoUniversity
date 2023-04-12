@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33513.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoUniversity", "ContosoUniversity\ContosoUniversity.csproj", "{A4B2A718-AC55-4F54-A2D7-3D515851E3C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{792DD576-0DD4-4BE6-8A39-DD5549754CBE}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContosoUniversity.IntegrationTests", "ContosoUniversity.IntegrationTests\ContosoUniversity.IntegrationTests.csproj", "{F429A017-3064-4703-877D-E060878F1109}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4B2A718-AC55-4F54-A2D7-3D515851E3C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4B2A718-AC55-4F54-A2D7-3D515851E3C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4B2A718-AC55-4F54-A2D7-3D515851E3C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4B2A718-AC55-4F54-A2D7-3D515851E3C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F429A017-3064-4703-877D-E060878F1109}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F429A017-3064-4703-877D-E060878F1109}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F429A017-3064-4703-877D-E060878F1109}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F429A017-3064-4703-877D-E060878F1109}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D919BB58-4E3C-4D83-A25B-2496AD06EB2A}
+	EndGlobalSection
+EndGlobal

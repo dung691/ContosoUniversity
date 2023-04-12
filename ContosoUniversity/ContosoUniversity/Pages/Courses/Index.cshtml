@@ -1,0 +1,39 @@
+﻿@page
+@model ContosoUniversity.Pages.Courses.Index
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<h2>Courses</h2>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th asp-display-name-for="Data.Courses[0].Id"></th>
+        <th asp-display-name-for="Data.Courses[0].Title"></th>
+        <th asp-display-name-for="Data.Courses[0].Credits"></th>
+        <th asp-display-name-for="Data.Courses[0].DepartmentName"></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Data.Courses)
+    {
+        <tr>
+            <td asp-display-for="@item.Id"></td>
+            <td asp-display-for="@item.Title"></td>
+            <td asp-display-for="@item.Credits"></td>
+            <td asp-display-for="@item.DepartmentName"></td>
+            <td>
+                <a asp-page="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
