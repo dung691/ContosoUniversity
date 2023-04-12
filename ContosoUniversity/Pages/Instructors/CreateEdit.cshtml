@@ -14,27 +14,27 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input asp-for="Data.Id" type="hidden"/>
-            <div class="form-group">
-                <label asp-for="Data.LastName" class="control-label"></label>
+            <div class="form-floating mb-3">
+                <label asp-for="Data.LastName" class="form-label"></label>
                 <input asp-for="Data.LastName" class="form-control" />
                 <span asp-validation-for="Data.LastName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Data.FirstMidName" class="control-label"></label>
+            <div class="form-floating mb-3">
+                <label asp-for="Data.FirstMidName" class="form-label"></label>
                 <input asp-for="Data.FirstMidName" class="form-control" />
                 <span asp-validation-for="Data.FirstMidName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Data.HireDate" class="control-label"></label>
+            <div class="form-floating mb-3">
+                <label asp-for="Data.HireDate" class="form-label"></label>
                 <input asp-for="Data.HireDate" class="form-control" />
                 <span asp-validation-for="Data.HireDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Data.OfficeAssignmentLocation" class="control-label"></label>
+            <div class="form-floating mb-3">
+                <label asp-for="Data.OfficeAssignmentLocation" class="form-label"></label>
                 <input asp-for="Data.OfficeAssignmentLocation" class="form-control" />
                 <span asp-validation-for="Data.OfficeAssignmentLocation" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
                 <div class="col-md-offset-2 col-md-10">
                     <table>
                         <tr>
@@ -63,7 +63,7 @@
                     </table>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

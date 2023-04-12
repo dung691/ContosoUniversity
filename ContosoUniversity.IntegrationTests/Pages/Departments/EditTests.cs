@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Departments;
 using ContosoUniversity.Pages.Instructors;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +21,7 @@ public class EditTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var dept = new Department
@@ -32,7 +29,7 @@ public class EditTests
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         await _fixture.InsertAsync(dept);
 
@@ -45,7 +42,7 @@ public class EditTests
 
         result.ShouldNotBeNull();
         result.Name.ShouldBe(dept.Name);
-        result.Administrator.Id.ShouldBe(adminId);
+        result.InstructorId.ShouldBe(adminId);
     }
 
     [Fact]
@@ -55,14 +52,14 @@ public class EditTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var admin2Id = await _fixture.SendAsync(new CreateEdit.Command
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var dept = new Department
@@ -70,7 +67,7 @@ public class EditTests
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         await _fixture.InsertAsync(dept);
 
@@ -83,8 +80,8 @@ public class EditTests
             {
                 Id = dept.Id,
                 Name = "English",
-                Administrator = admin2,
-                StartDate = DateTime.Today.AddDays(-1),
+                InstructorId = admin2.Id,
+                StartDate = DateOnly.FromDateTime(DateTime.Today).AddDays(-1),
                 Budget = 456m
             };
 
@@ -94,7 +91,7 @@ public class EditTests
         var result = await _fixture.ExecuteDbContextAsync(db => db.Departments.Where(d => d.Id == dept.Id).Include(d => d.Administrator).SingleOrDefaultAsync());
 
         result.Name.ShouldBe(command.Name);
-        result.Administrator.Id.ShouldBe(command.Administrator.Id);
+        result.Administrator.Id.ShouldBe(command.InstructorId);
         result.StartDate.ShouldBe(command.StartDate.GetValueOrDefault());
         result.Budget.ShouldBe(command.Budget.GetValueOrDefault());
     }

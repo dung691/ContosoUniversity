@@ -18,7 +18,7 @@ public class DbContextTransactionPageFilter : IAsyncPageFilter
             var actionExecuted = await next();
             if (actionExecuted is { Exception: not null, ExceptionHandled: false })
             {
-                await dbContext.RollbackTransactionAsync();
+                 dbContext.RollbackTransaction();
             }
             else
             {
@@ -27,7 +27,7 @@ public class DbContextTransactionPageFilter : IAsyncPageFilter
         }
         catch (Exception)
         {
-            await dbContext.RollbackTransactionAsync();
+            dbContext.RollbackTransaction();
             throw;
         }
     }

@@ -1,0 +1,24 @@
+﻿@page
+@model AboutPage
+
+
+@{
+    ViewData["Title"] = "Student Body Statistics";
+}
+
+<h2>Student Body Statistics</h2>
+
+<table>
+    <tr>
+        <th asp-display-name-for="Data[0].EnrollmentDate"></th>
+        <th asp-display-name-for="Data[0].StudentCount"></th>
+    </tr>
+
+    @foreach (var item in Model.Data)
+    {
+        <tr>
+            <td asp-display-for="@item.EnrollmentDate"></td>
+            <td asp-display-for="@item.StudentCount"></td>
+        </tr>
+    }
+</table>

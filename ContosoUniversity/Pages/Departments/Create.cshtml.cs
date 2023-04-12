@@ -52,7 +52,7 @@ public class Create : PageModel
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? StartDate { get; init; }
+        public DateOnly? StartDate { get; init; }
 
         [SelectListFor<Instructor>, DisplayName("Administrator")]
         public int InstructorId { get; init; }

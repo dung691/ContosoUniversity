@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
@@ -22,7 +19,7 @@ public class CreateEditTests
         var englishDept = new Department
         {
             Name = "English",
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var english101 = new Course
         {
@@ -45,21 +42,22 @@ public class CreateEditTests
         {
             FirstMidName = "Jerry",
             LastName = "Seinfeld",
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             OfficeAssignmentLocation = "Houston",
             SelectedCourses = new [] {english101.Id.ToString(), english201.Id.ToString()}
         };
 
         var id = await _fixture.SendAsync(command);
 
-        var created = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == id).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
+        var created = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == id)
+            .Include(i => i.Courses).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
         created.FirstMidName.ShouldBe(command.FirstMidName);
         created.LastName.ShouldBe(command.LastName);
         created.HireDate.ShouldBe(command.HireDate.GetValueOrDefault());
         created.OfficeAssignment.ShouldNotBeNull();
         created.OfficeAssignment.Location.ShouldBe(command.OfficeAssignmentLocation);
-        created.CourseAssignments.Count.ShouldBe(2);
+        created.Courses.Count.ShouldBe(2);
     }
 
     [Fact]
@@ -68,7 +66,7 @@ public class CreateEditTests
         var englishDept = new Department
         {
             Name = "English",
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var english101 = new Course
         {
@@ -92,22 +90,23 @@ public class CreateEditTests
             FirstMidName = "George",
             LastName = "Costanza",
             OfficeAssignmentLocation = "Austin",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var command = new CreateEdit.Command
         {
             FirstMidName = "Jerry",
             LastName = "Seinfeld",
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             OfficeAssignmentLocation = "Houston",
-            SelectedCourses = new string[0],
+            SelectedCourses = Array.Empty<string>(),
             Id = instructorId
         };
 
         await _fixture.SendAsync(command);
 
-        var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
+        var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId)
+            .Include(i => i.Courses).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
         edited.FirstMidName.ShouldBe(command.FirstMidName);
         edited.LastName.ShouldBe(command.LastName);
@@ -122,7 +121,7 @@ public class CreateEditTests
         var englishDept = new Department
         {
             Name = "English",
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var english101 = new Course
         {
@@ -145,7 +144,7 @@ public class CreateEditTests
             FirstMidName = "George",
             LastName = "Costanza",
             OfficeAssignmentLocation = "Austin",
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             SelectedCourses = new[] { english101.Id.ToString() }
         });
 
@@ -153,7 +152,7 @@ public class CreateEditTests
         {
             FirstMidName = "Jerry",
             LastName = "Seinfeld",
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             OfficeAssignmentLocation = "Houston",
             SelectedCourses = new[] { english201.Id.ToString() },
             Id = instructorId
@@ -161,15 +160,16 @@ public class CreateEditTests
 
         await _fixture.SendAsync(command);
 
-        var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId).Include(i => i.CourseAssignments).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
+        var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId)
+            .Include(i => i.Courses).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
         edited.FirstMidName.ShouldBe(command.FirstMidName);
         edited.LastName.ShouldBe(command.LastName);
         edited.HireDate.ShouldBe(command.HireDate.GetValueOrDefault());
         edited.OfficeAssignment.ShouldNotBeNull();
         edited.OfficeAssignment.Location.ShouldBe(command.OfficeAssignmentLocation);
-        edited.CourseAssignments.Count.ShouldBe(1);
-        edited.CourseAssignments.First().CourseId.ShouldBe(english201.Id);
+        edited.Courses.Count.ShouldBe(1);
+        edited.Courses.First().Id.ShouldBe(english201.Id);
     }
 
 }

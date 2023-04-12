@@ -1,10 +1,14 @@
 using ContosoUniversity.Data;
+using ContosoUniversity.Extensions;
 using ContosoUniversity.Infrastructure;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Serilog
+builder.AddSerilog();
 
 // Add services to the container.
 builder.Services.AddRazorPages(options => options.Conventions.ConfigureFilter(new DbContextTransactionPageFilter()));

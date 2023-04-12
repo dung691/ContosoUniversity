@@ -37,7 +37,7 @@ public class Create : PageModel
         [Display(Name = "First Name")]
         public string FirstMidName { get; init; }
 
-        public DateTime? EnrollmentDate { get; init; }
+        public DateOnly? EnrollmentDate { get; init; }
     }
 
     public class Validator : AbstractValidator<Command>

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using Shouldly;
 using Xunit;
 
@@ -24,7 +21,7 @@ public class IndexTests
             {
                 FirstMidName = "George",
                 LastName = "Jones",
-                HireDate = DateTime.Today
+                HireDate = DateOnly.FromDateTime(DateTime.Today)
             });
 
         var englishDept = new Department
@@ -32,14 +29,14 @@ public class IndexTests
             Name = "English",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var historyDept = new Department
         {
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         var english = new Course

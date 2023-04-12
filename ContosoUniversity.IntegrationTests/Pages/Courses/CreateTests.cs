@@ -21,7 +21,7 @@ public class CreateTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var dept = new Department
@@ -29,7 +29,7 @@ public class CreateTests
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         Create.Command command = null;
@@ -40,7 +40,7 @@ public class CreateTests
             command = new Create.Command
             {
                 Credits = 4,
-                Department = dept,
+                DepartmentId = dept.Id,
                 Number = _fixture.NextCourseNumber(),
                 Title = "English 101"
             };

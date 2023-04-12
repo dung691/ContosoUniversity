@@ -43,7 +43,7 @@ public class Delete : PageModel
         [Display(Name = "First Name")]
         public string FirstMidName { get; init; }
         public string LastName { get; init; }
-        public DateTime EnrollmentDate { get; init; }
+        public DateOnly EnrollmentDate { get; init; }
     }
 
     public class MappingProfile : Profile

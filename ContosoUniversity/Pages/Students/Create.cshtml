@@ -13,22 +13,22 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Data.LastName" class="control-label"></label>
-                <input asp-for="Data.LastName" class="form-control" />
+            <div class="form-floating mb-3">
+                <input asp-for="Data.LastName" class="form-control" placeholder="Doe" />
+                <label asp-for="Data.LastName" class="form-label"></label>
                 <span asp-validation-for="Data.LastName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Data.FirstMidName" class="control-label"></label>
-                <input asp-for="Data.FirstMidName" class="form-control" />
+            <div class="form-floating mb-3">
+                <input asp-for="Data.FirstMidName" class="form-control" placeholder="John" />
+                <label asp-for="Data.FirstMidName" class="form-label"></label>
                 <span asp-validation-for="Data.FirstMidName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Data.EnrollmentDate" class="control-label"></label>
-                <input asp-for="Data.EnrollmentDate" class="form-control" />
+            <div class="form-floating mb-3">
+                <input asp-for="Data.EnrollmentDate" class="form-control datepicker" placeholder="Today" />
+                <label asp-for="Data.EnrollmentDate" class="form-label"></label>
                 <span asp-validation-for="Data.EnrollmentDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-floating mb-3">
                 <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
         </form>

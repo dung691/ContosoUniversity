@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Students;
 using Shouldly;
 using Xunit;
@@ -21,7 +19,7 @@ public class EditTests
         {
             FirstMidName = "Joe",
             LastName = "Schmoe",
-            EnrollmentDate = DateTime.Today
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         var studentId = await _fixture.SendAsync(cmd);
@@ -45,7 +43,7 @@ public class EditTests
         {
             FirstMidName = "Joe",
             LastName = "Schmoe",
-            EnrollmentDate = DateTime.Today
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         var studentId = await _fixture.SendAsync(createCommand);
@@ -55,7 +53,7 @@ public class EditTests
             Id = studentId,
             FirstMidName = "Mary",
             LastName = "Smith",
-            EnrollmentDate = DateTime.Today.AddYears(-1)
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today).AddYears(-1)
         };
 
         await _fixture.SendAsync(editCommand);

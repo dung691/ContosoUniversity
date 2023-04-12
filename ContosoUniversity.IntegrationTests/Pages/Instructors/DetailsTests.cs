@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
 using Shouldly;
 using Xunit;
@@ -20,7 +18,7 @@ public class DetailsTests
         var englishDept = new Department
         {
             Name = "English",
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var english101 = new Course
         {
@@ -36,7 +34,7 @@ public class DetailsTests
             FirstMidName = "George",
             LastName = "Costanza",
             OfficeAssignmentLocation = "Austin",
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             SelectedCourses = new[] { english101.Id.ToString() }
         };
         var instructorId = await _fixture.SendAsync(command);

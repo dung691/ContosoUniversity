@@ -31,8 +31,7 @@ public class Create : PageModel
 
     public record Command : IRequest<int>
     {
-        [Display(Name = "Number")]
-        public int Id { get; init; }
+        public int Number { get; init; }
         public string? Title { get; init; }
         public int Credits { get; init; }
         [SelectListFor<Department>]
@@ -58,7 +57,7 @@ public class Create : PageModel
         {
             var course = new Course
             {
-                Id = message.Id,
+                Id = message.Number,
                 Credits = message.Credits,
                 DepartmentId = message.DepartmentId,
                 Title = message.Title

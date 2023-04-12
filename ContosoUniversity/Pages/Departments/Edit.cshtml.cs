@@ -46,11 +46,10 @@ public class Edit : PageModel
 
         public decimal? Budget { get; init; }
 
-        public DateTime? StartDate { get; init; }
+        public DateOnly? StartDate { get; init; }
         [SelectListFor<Instructor>, DisplayName("Administrator")]
         public int InstructorId { get; set; }
         public int Id { get; init; }
-        public byte[] RowVersion { get; init; }
     }
 
     public class Validator : AbstractValidator<Command>
@@ -101,7 +100,6 @@ public class Edit : PageModel
             dept.Name = message.Name;
             dept.StartDate = message.StartDate!.Value;
             dept.Budget = message.Budget!.Value;
-            // dept.RowVersion = message.RowVersion;
             dept.InstructorId = message.InstructorId;
         }
     }

@@ -46,7 +46,6 @@ public class Delete : PageModel
         public DateTime StartDate { get; init; }
         [Display(Name = "Administrator")]
         public string? AdministratorFullName { get; init; }
-        public byte[] RowVersion { get; init; }
     }
 
     public class MappingProfile : Profile

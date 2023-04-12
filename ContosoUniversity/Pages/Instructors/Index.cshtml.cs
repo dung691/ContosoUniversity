@@ -132,7 +132,10 @@ public class Index : PageModel
         public MappingProfile()
         {
             CreateProjection<Instructor, Model.Instructor>();
-            CreateProjection<CourseAssignment, Model.CourseAssignment>();
+            CreateProjection<Course, Model.CourseAssignment>()
+                .ForMember(d => d.CourseId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(d => d.CourseTitle, opt => opt.MapFrom(s => s.Title))
+                ;
             CreateProjection<Course, Model.Course>();
             CreateProjection<Enrollment, Model.Enrollment>();
         }
@@ -152,8 +155,7 @@ public class Index : PageModel
         public async Task<Model> Handle(Query message, CancellationToken token)
         {
             var instructors = await _db.Instructors
-                    .Include(i => i.CourseAssignments)
-                    .ThenInclude(c => c.Course)
+                    .Include(i => i.Courses)
                     .OrderBy(i => i.LastName)
                     .ProjectTo<Model.Instructor>(_configuration)
                     .ToListAsync(token)
@@ -170,9 +172,9 @@ public class Index : PageModel
 
             if (message.Id != null)
             {
-                courses = await _db.CourseAssignments
-                    .Where(ci => ci.InstructorId == message.Id)
-                    .Select(ci => ci.Course)
+                courses = await _db.Courses
+                    .Include(ci => ci.Instructors)
+                    .Where(ci => ci.Instructors.Any(i => i.Id == message.Id))
                     .ProjectTo<Model.Course>(_configuration)
                     .ToListAsync(token);
             }

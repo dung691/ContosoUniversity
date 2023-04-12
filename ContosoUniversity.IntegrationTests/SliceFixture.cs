@@ -59,7 +59,7 @@ public class SliceFixture : IAsyncLifetime
         }
         catch (Exception)
         {
-            dbContext.RollbackTransactionAsync(); 
+            dbContext.RollbackTransaction(); 
             throw;
         }
     }
@@ -81,7 +81,7 @@ public class SliceFixture : IAsyncLifetime
         }
         catch (Exception)
         {
-            dbContext.RollbackTransactionAsync();
+            dbContext.RollbackTransaction();
             throw;
         }
     }
@@ -171,8 +171,7 @@ public class SliceFixture : IAsyncLifetime
         });
     }
 
-    public Task<T> FindAsync<T>(int id)
-        where T : class, IEntity
+    public Task<T> FindAsync<T>(int id) where T : class
     {
         return ExecuteDbContextAsync(db => db.Set<T>().FindAsync(id).AsTask());
     }

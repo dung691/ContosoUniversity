@@ -17,21 +17,21 @@ public static class DbInitializer
         var students = new Student[]
         {
             new Student { FirstMidName = "Carson",   LastName = "Alexander",
-                EnrollmentDate = DateTime.Parse("2010-09-01") },
+                EnrollmentDate = DateOnly.Parse("2010-09-01") },
             new Student { FirstMidName = "Meredith", LastName = "Alonso",
-                EnrollmentDate = DateTime.Parse("2012-09-01") },
+                EnrollmentDate = DateOnly.Parse("2012-09-01") },
             new Student { FirstMidName = "Arturo",   LastName = "Anand",
-                EnrollmentDate = DateTime.Parse("2013-09-01") },
+                EnrollmentDate = DateOnly.Parse("2013-09-01") },
             new Student { FirstMidName = "Gytis",    LastName = "Barzdukas",
-                EnrollmentDate = DateTime.Parse("2012-09-01") },
+                EnrollmentDate = DateOnly.Parse("2012-09-01") },
             new Student { FirstMidName = "Yan",      LastName = "Li",
-                EnrollmentDate = DateTime.Parse("2012-09-01") },
+                EnrollmentDate = DateOnly.Parse("2012-09-01") },
             new Student { FirstMidName = "Peggy",    LastName = "Justice",
-                EnrollmentDate = DateTime.Parse("2011-09-01") },
+                EnrollmentDate = DateOnly.Parse("2011-09-01") },
             new Student { FirstMidName = "Laura",    LastName = "Norman",
-                EnrollmentDate = DateTime.Parse("2013-09-01") },
+                EnrollmentDate = DateOnly.Parse("2013-09-01") },
             new Student { FirstMidName = "Nino",     LastName = "Olivetto",
-                EnrollmentDate = DateTime.Parse("2005-09-01") }
+                EnrollmentDate = DateOnly.Parse("2005-09-01") }
         };
 
         foreach (Student s in students)
@@ -43,15 +43,15 @@ public static class DbInitializer
         var instructors = new Instructor[]
         {
             new Instructor { FirstMidName = "Kim",     LastName = "Abercrombie",
-                HireDate = DateTime.Parse("1995-03-11") },
+                HireDate = DateOnly.Parse("1995-03-11") },
             new Instructor { FirstMidName = "Fadi",    LastName = "Fakhouri",
-                HireDate = DateTime.Parse("2002-07-06") },
+                HireDate = DateOnly.Parse("2002-07-06") },
             new Instructor { FirstMidName = "Roger",   LastName = "Harui",
-                HireDate = DateTime.Parse("1998-07-01") },
+                HireDate = DateOnly.Parse("1998-07-01") },
             new Instructor { FirstMidName = "Candace", LastName = "Kapoor",
-                HireDate = DateTime.Parse("2001-01-15") },
+                HireDate = DateOnly.Parse("2001-01-15") },
             new Instructor { FirstMidName = "Roger",   LastName = "Zheng",
-                HireDate = DateTime.Parse("2004-02-12") }
+                HireDate = DateOnly.Parse("2004-02-12") }
         };
 
         foreach (Instructor i in instructors)
@@ -63,16 +63,16 @@ public static class DbInitializer
         var departments = new Department[]
         {
             new Department { Name = "English",     Budget = 350000,
-                StartDate = DateTime.Parse("2007-09-01"),
+                StartDate = DateOnly.Parse("2007-09-01"),
                 InstructorId  = instructors.Single( i => i.LastName == "Abercrombie").Id },
             new Department { Name = "Mathematics", Budget = 100000,
-                StartDate = DateTime.Parse("2007-09-01"),
+                StartDate = DateOnly.Parse("2007-09-01"),
                 InstructorId  = instructors.Single( i => i.LastName == "Fakhouri").Id },
             new Department { Name = "Engineering", Budget = 350000,
-                StartDate = DateTime.Parse("2007-09-01"),
+                StartDate = DateOnly.Parse("2007-09-01"),
                 InstructorId  = instructors.Single( i => i.LastName == "Harui").Id },
             new Department { Name = "Economics",   Budget = 100000,
-                StartDate = DateTime.Parse("2007-09-01"),
+                StartDate = DateOnly.Parse("2007-09-01"),
                 InstructorId  = instructors.Single( i => i.LastName == "Kapoor").Id }
         };
 
@@ -132,46 +132,25 @@ public static class DbInitializer
         }
         context.SaveChanges();
 
-        var courseInstructors = new CourseAssignment[]
-        {
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Chemistry" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Kapoor").Id
-            },
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Chemistry" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Harui").Id
-            },
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Microeconomics" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Zheng").Id
-            },
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Macroeconomics" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Zheng").Id
-            },
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Calculus" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Fakhouri").Id
-            },
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Trigonometry" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Harui").Id
-            },
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Composition" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Abercrombie").Id
-            },
-            new CourseAssignment {
-                CourseId = courses.Single(c => c.Title == "Literature" ).Id,
-                InstructorId = instructors.Single(i => i.LastName == "Abercrombie").Id
-            },
-        };
+        var chemistryCourse = courses.Single(c => c.Title == "Chemistry");
+        chemistryCourse.Instructors.Add(instructors.Single(i => i.LastName == "Kapoor"));
+        chemistryCourse.Instructors.Add(instructors.Single(i => i.LastName == "Harui"));
 
-        foreach (CourseAssignment ci in courseInstructors)
-        {
-            context.CourseAssignments.Add(ci);
-        }
+        var microeconomicsCourse = courses.Single(c => c.Title == "Microeconomics");
+        microeconomicsCourse.Instructors.Add(instructors.Single(i => i.LastName == "Zheng"));
+
+        var calculusCourse = courses.Single(c => c.Title == "Calculus");
+        calculusCourse.Instructors.Add(instructors.Single(i => i.LastName == "Fakhouri"));
+
+        var trigonometryCourse = courses.Single(c => c.Title == "Trigonometry");
+        trigonometryCourse.Instructors.Add(instructors.Single(i => i.LastName == "Harui"));
+
+        var compositionCourse = courses.Single(c => c.Title == "Composition");
+        compositionCourse.Instructors.Add(instructors.Single(i => i.LastName == "Abercrombie"));
+
+        var literatureCourse = courses.Single(c => c.Title == "Literature");
+        literatureCourse.Instructors.Add(instructors.Single(i => i.LastName == "Abercrombie"));
+
         context.SaveChanges();
 
         var enrollments = new Enrollment[]
@@ -234,10 +213,8 @@ public static class DbInitializer
 
         foreach (Enrollment e in enrollments)
         {
-            var enrollmentInDataBase = context.Enrollments.Where(
-                s =>
-                    s.Student.Id == e.StudentId &&
-                    s.Course.Id == e.CourseId).SingleOrDefault();
+            var enrollmentInDataBase = context.Enrollments
+                .SingleOrDefault(s => s.Student.Id == e.StudentId && s.Course.Id == e.CourseId);
             if (enrollmentInDataBase == null)
             {
                 context.Enrollments.Add(e);

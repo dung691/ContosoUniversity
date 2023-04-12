@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
@@ -22,7 +19,7 @@ public class DeleteTests
         var englishDept = new Department
         {
             Name = "English",
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var english101 = new Course
         {
@@ -36,7 +33,7 @@ public class DeleteTests
             FirstMidName = "George",
             LastName = "Costanza",
             OfficeAssignmentLocation = "Austin",
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             SelectedCourses = new []{ english101.Id.ToString()}
         };
         var instructorId = await _fixture.SendAsync(command);
@@ -58,12 +55,12 @@ public class DeleteTests
             FirstMidName = "George",
             LastName = "Costanza",
             OfficeAssignmentLocation = "Austin",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
         var englishDept = new Department
         {
             Name = "English",
-            StartDate = DateTime.Today,
+            StartDate = DateOnly.FromDateTime(DateTime.Today),
             InstructorId = instructorId
         };
         var english101 = new Course
@@ -82,7 +79,7 @@ public class DeleteTests
             FirstMidName = "George",
             LastName = "Costanza",
             OfficeAssignmentLocation = "Austin",
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             SelectedCourses = new[] { english101.Id.ToString() }
         });
 
@@ -97,7 +94,7 @@ public class DeleteTests
 
         englishDept.InstructorId.ShouldBeNull();
 
-        var courseInstructorCount = await _fixture.ExecuteDbContextAsync(db => db.CourseAssignments.Where(ci => ci.InstructorId == instructorId).CountAsync());
+        var courseInstructorCount = await _fixture.ExecuteDbContextAsync(db => db.Courses.Where(ci => ci.Id == english101.Id).Include(ci => ci.Instructors).Select(r => r.Instructors).CountAsync());
 
         courseInstructorCount.ShouldBe(0);
     }

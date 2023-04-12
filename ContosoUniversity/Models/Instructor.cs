@@ -22,13 +22,13 @@ public class Instructor
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     [Display(Name = "Hire Date")]
-    public DateTime HireDate { get; set; }
+    public DateOnly HireDate { get; set; }
 
     [Display(Name = "Full Name")]
     public string FullName => LastName + ", " + FirstMidName;
 
-    public ICollection<CourseAssignment> CourseAssignments { get; set; }
-    public OfficeAssignment OfficeAssignment { get; set; }
+    public List<Course> Courses { get; set; } = new();
+    public OfficeAssignment? OfficeAssignment { get; set; }
 
     public void Handle(CreateEdit.Command message,
         IEnumerable<Course> courses)
@@ -63,17 +63,15 @@ public class Instructor
         }
     }
 
-    private void UpdateInstructorCourses(string[] selectedCourses, IEnumerable<Course> courses)
+    private void UpdateInstructorCourses(string[]? selectedCourses, IEnumerable<Course> courses)
     {
         if (selectedCourses == null)
         {
-            CourseAssignments = new List<CourseAssignment>();
             return;
         }
 
         var selectedCoursesHs = new HashSet<string>(selectedCourses);
-        var instructorCourses = new HashSet<int>
-            (CourseAssignments.Select(c => c.CourseId));
+        var instructorCourses = new HashSet<int>(Courses.Select(c => c.Id));
 
         foreach (var course in courses)
         {
@@ -81,15 +79,15 @@ public class Instructor
             {
                 if (!instructorCourses.Contains(course.Id))
                 {
-                    CourseAssignments.Add(new CourseAssignment { Course = course, Instructor = this });
+                    Courses.Add(course);
                 }
             }
             else
             {
                 if (instructorCourses.Contains(course.Id))
                 {
-                    var toRemove = CourseAssignments.Single(ci => ci.CourseId == course.Id);
-                    CourseAssignments.Remove(toRemove);
+                    var toRemove = Courses.Single(ci => ci.Id == course.Id);
+                    Courses.Remove(toRemove);
                 }
             }
         }

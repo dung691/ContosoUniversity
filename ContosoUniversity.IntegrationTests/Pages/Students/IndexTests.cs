@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using Shouldly;
 using Xunit;
 using Index = ContosoUniversity.Pages.Students.Index;
@@ -22,13 +19,13 @@ public class IndexTests
         var lastName = "Schmoe" + suffix;
         var student1 = new Student
         {
-            EnrollmentDate = DateTime.Today,
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today),
             FirstMidName = "Joe",
             LastName = lastName
         };
         var student2 = new Student
         {
-            EnrollmentDate = DateTime.Today,
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today),
             FirstMidName = "Jane",
             LastName = lastName
         };
@@ -50,13 +47,13 @@ public class IndexTests
         var lastName = "Schmoe" + suffix;
         var student1 = new Student
         {
-            EnrollmentDate = DateTime.Today,
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today),
             FirstMidName = "Joe",
             LastName = lastName + "zzz"
         };
         var student2 = new Student
         {
-            EnrollmentDate = DateTime.Today,
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today),
             FirstMidName = "Jane",
             LastName = lastName + "aaa"
         };

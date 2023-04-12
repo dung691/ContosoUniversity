@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
@@ -25,7 +22,7 @@ public class DeleteTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var dept = new Department
@@ -33,7 +30,7 @@ public class DeleteTests
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         var course = new Course
@@ -61,7 +58,7 @@ public class DeleteTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var dept = new Department
@@ -69,7 +66,7 @@ public class DeleteTests
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         var course = new Course

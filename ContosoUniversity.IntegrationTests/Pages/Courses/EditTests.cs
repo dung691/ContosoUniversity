@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Courses;
 using ContosoUniversity.Pages.Instructors;
 using Shouldly;
@@ -22,7 +20,7 @@ public class EditTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var dept = new Department
@@ -30,7 +28,7 @@ public class EditTests
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         var course = new Course
@@ -46,7 +44,7 @@ public class EditTests
 
         result.ShouldNotBeNull();
         result.Credits.ShouldBe(course.Credits);
-        result.Department.Id.ShouldBe(dept.Id);
+        result.DepartmentId.ShouldBe(dept.Id);
         result.Title.ShouldBe(course.Title);
     }
 
@@ -57,7 +55,7 @@ public class EditTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var dept = new Department
@@ -65,14 +63,14 @@ public class EditTests
             Name = "History",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var newDept = new Department
         {
             Name = "English",
             InstructorId = adminId,
             Budget = 123m,
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         var course = new Course
@@ -93,7 +91,7 @@ public class EditTests
                 Id = course.Id,
                 Credits = 5,
                 Title = "English 202",
-                Department = await ctxt.Departments.FindAsync(newDept.Id)
+                DepartmentId = newDept.Id
             };
 
             await mediator.Send(command);

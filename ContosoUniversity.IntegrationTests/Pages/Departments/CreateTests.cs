@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Pages.Departments;
+﻿using ContosoUniversity.Pages.Departments;
 using ContosoUniversity.Pages.Instructors;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
@@ -24,7 +21,7 @@ public class CreateTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         Create.Command command = null;
@@ -37,8 +34,8 @@ public class CreateTests
             {
                 Budget = 10m,
                 Name = "Engineering",
-                StartDate = DateTime.Now.Date,
-                Administrator = admin
+                StartDate = DateOnly.FromDateTime(DateTime.Now.Date),
+                InstructorId = admin.Id
             };
 
             await mediator.Send(command);

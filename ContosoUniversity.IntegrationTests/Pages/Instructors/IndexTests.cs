@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
 using Shouldly;
 using Xunit;
@@ -22,7 +19,7 @@ public class IndexTests
         var englishDept = new Department
         {
             Name = "English",
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var english101 = new Course
         {
@@ -46,7 +43,7 @@ public class IndexTests
             FirstMidName = "George",
             LastName = "Costanza",
             SelectedCourses = new[] { english101.Id.ToString(), english201.Id.ToString() },
-            HireDate = DateTime.Today,
+            HireDate = DateOnly.FromDateTime(DateTime.Today),
             OfficeAssignmentLocation = "Austin"
         });
 
@@ -55,20 +52,20 @@ public class IndexTests
             OfficeAssignmentLocation = "Houston",
             FirstMidName = "Jerry",
             LastName = "Seinfeld",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var student1 = new Student
         {
             FirstMidName = "Cosmo",
             LastName = "Kramer",
-            EnrollmentDate = DateTime.Today
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today)
         };
         var student2 = new Student
         {
             FirstMidName = "Elaine",
             LastName = "Benes",
-            EnrollmentDate = DateTime.Today
+            EnrollmentDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
         await _fixture.InsertAsync(student1, student2);

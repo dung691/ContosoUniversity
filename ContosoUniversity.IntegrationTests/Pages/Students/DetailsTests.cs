@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using ContosoUniversity.Models;
+﻿using ContosoUniversity.Models;
 using ContosoUniversity.Pages.Instructors;
 using ContosoUniversity.Pages.Students;
 using Shouldly;
@@ -23,7 +21,7 @@ public class DetailsTests
         {
             FirstMidName = "George",
             LastName = "Costanza",
-            HireDate = DateTime.Today
+            HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
         var englishDept = new Department
@@ -31,7 +29,7 @@ public class DetailsTests
             InstructorId = adminId,
             Budget = 123m,
             Name = "English 101",
-            StartDate = DateTime.Today
+            StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
         await _fixture.InsertAsync(englishDept);
         var deptId = englishDept.Id;
@@ -56,7 +54,7 @@ public class DetailsTests
         {
             FirstMidName = "Joe",
             LastName = "Schmoe",
-            EnrollmentDate = new DateTime(2013, 1, 1)
+            EnrollmentDate = new DateOnly(2013, 1, 1)
         };
         var studentId = await _fixture.SendAsync(command);
 

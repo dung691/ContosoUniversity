@@ -19,7 +19,6 @@ public class SchoolContext : DbContext
     public DbSet<Department> Departments { get; set; }
     public DbSet<Instructor> Instructors { get; set; }
     public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
-    public DbSet<CourseAssignment> CourseAssignments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -29,10 +28,6 @@ public class SchoolContext : DbContext
         modelBuilder.Entity<Department>().ToTable("Department");
         modelBuilder.Entity<Instructor>().ToTable("Instructor");
         modelBuilder.Entity<OfficeAssignment>().ToTable("OfficeAssignment");
-        modelBuilder.Entity<CourseAssignment>().ToTable("CourseAssignment");
-
-        modelBuilder.Entity<CourseAssignment>()
-            .HasKey(c => new { CourseID = c.CourseId, InstructorID = c.InstructorId });
     }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
@@ -55,7 +50,7 @@ public class SchoolContext : DbContext
         }
         catch
         {
-            await RollbackTransactionAsync(cancellationToken);
+            RollbackTransaction();
             throw;
         }
         finally
@@ -68,11 +63,11 @@ public class SchoolContext : DbContext
         }
     }
 
-    public async Task RollbackTransactionAsync(CancellationToken cancellationToken = default)
+    public void RollbackTransaction()
     {
         try
         {
-            await _currentTransaction?.RollbackAsync(cancellationToken);
+            _currentTransaction?.Rollback();
         }
         finally
         {

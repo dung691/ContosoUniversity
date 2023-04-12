@@ -68,7 +68,7 @@ public class CreateEdit : PageModel
         public string FirstMidName { get; init; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        public DateTime? HireDate { get; init; }
+        public DateOnly? HireDate { get; init; }
 
         [Display(Name = "Location")]
         public string OfficeAssignmentLocation { get; init; }
@@ -108,7 +108,8 @@ public class CreateEdit : PageModel
             CreateProjection<Instructor, Command>()
                 .ForMember(d => d.SelectedCourses, opt => opt.Ignore())
                 .ForMember(d => d.AssignedCourses, opt => opt.Ignore());
-            CreateProjection<CourseAssignment, Command.CourseAssignment>();
+            CreateProjection<Course, Command.CourseAssignment>()
+                .ForMember(d => d.CourseId, opt => opt.MapFrom(s => s.Id));
         }
     }
 
@@ -170,7 +171,7 @@ public class CreateEdit : PageModel
             {
                 instructor = await _db.Instructors
                     .Include(i => i.OfficeAssignment)
-                    .Include(i => i.CourseAssignments)
+                    .Include(i => i.Courses)
                     .Where(i => i.Id == message.Id)
                     .SingleAsync(token);
             }

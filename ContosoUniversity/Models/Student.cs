@@ -18,9 +18,9 @@ public class Student
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     [Display(Name = "Enrollment Date")]
-    public DateTime EnrollmentDate { get; set; }
+    public DateOnly EnrollmentDate { get; set; }
     [Display(Name = "Full Name")]
     public string FullName => LastName + ", " + FirstMidName;
 
-    public ICollection<Enrollment> Enrollments { get; set; }
+    public List<Enrollment> Enrollments { get; set; } = new();
 }
