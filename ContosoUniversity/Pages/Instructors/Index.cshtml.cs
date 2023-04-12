@@ -95,12 +95,12 @@ public class Index : PageModel
 
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
             [Display(Name = "Hire Date")]
-            public DateTime HireDate { get; init; }
+            public DateOnly HireDate { get; init; }
 
             [DisplayName("Office")]
             public string OfficeAssignmentLocation { get; init; }
             [DisplayName("Courses")]
-            public IEnumerable<CourseAssignment> CourseAssignments { get; init; }
+            public IEnumerable<CourseAssignment> Courses { get; init; }
         }
 
         public record CourseAssignment

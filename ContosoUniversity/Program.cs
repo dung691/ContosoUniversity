@@ -1,6 +1,8 @@
 using ContosoUniversity.Data;
 using ContosoUniversity.Extensions;
 using ContosoUniversity.Infrastructure;
+using ContosoUniversity.Infrastructure.TagHelpers;
+using ContosoUniversity.Infrastructure.TagHelpers.SelectOptionsProviders;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +26,9 @@ builder.Services.AddMediatR(options => options.RegisterServicesFromAssembly(type
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+builder.Services.AddScoped<ISelectOptionsProvider, DepartmentSelectOptionsProvider>();
+builder.Services.AddScoped<ISelectOptionsProvider, InstructorSelectOptionsProvider>();
 
 var app = builder.Build();
 

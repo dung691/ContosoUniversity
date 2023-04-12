@@ -76,7 +76,7 @@ public class CreateEdit : PageModel
         public string[] SelectedCourses { get; init; } = Array.Empty<string>();
 
         public List<AssignedCourseData> AssignedCourses { get; init; } = new();
-        public List<CourseAssignment> CourseAssignments { get; init; } = new();
+        public List<CourseAssignment> Courses { get; init; } = new();
 
         public record AssignedCourseData
         {
@@ -134,18 +134,19 @@ public class CreateEdit : PageModel
             else
             {
                 model = await _db.Instructors
+                    .Include(i => i.Courses)
                     .Where(i => i.Id == message.Id)
                     .ProjectTo<Command>(_configuration)
                     .SingleOrDefaultAsync(token);
             }
 
-            var instructorCourses = new HashSet<int>(model.CourseAssignments.Select(c => c.CourseId));
-            var viewModel = _db.Courses.Select(course => new Command.AssignedCourseData
+            var instructorCourses = model.Courses.Select(c => c.CourseId);
+            var viewModel = await _db.Courses.Select(course => new Command.AssignedCourseData
             {
                 CourseId = course.Id,
                 Title = course.Title,
                 Assigned = instructorCourses.Any() && instructorCourses.Contains(course.Id)
-            }).ToList();
+            }).ToListAsync(token);
 
             model = model with { AssignedCourses = viewModel };
 

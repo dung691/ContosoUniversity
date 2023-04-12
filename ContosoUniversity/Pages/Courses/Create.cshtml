@@ -13,25 +13,25 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
-                <input asp-for="Data.Number" class="form-control" />
+                <input asp-for="Data.Number" class="form-control" placeholder="Enter number"/>
                 <label asp-for="Data.Number" class="form-label"></label>
                 <span asp-validation-for="Data.Number" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
+                <input asp-for="Data.Title" class="form-control" placeholder="Enter title" />
                 <label asp-for="Data.Title" class="form-label"></label>
-                <input asp-for="Data.Title" class="form-control" />
                 <span asp-validation-for="Data.Title" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
+                <input asp-for="Data.Credits" class="form-control" placeholder="Enter credits" />
                 <label asp-for="Data.Credits" class="form-label"></label>
-                <input asp-for="Data.Credits" class="form-control" />
                 <span asp-validation-for="Data.Credits" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <label asp-for="Data.DepartmentId" class="form-label"></label>
                 <select asp-for="Data.DepartmentId" class="form-select">
                     <option value="">-- Select Department --</option>
                 </select>
+                <label asp-for="Data.DepartmentId" class="form-label"></label>
                 <span asp-validation-for="Data.DepartmentId" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">

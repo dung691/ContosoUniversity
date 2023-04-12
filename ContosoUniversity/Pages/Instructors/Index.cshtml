@@ -17,7 +17,7 @@
             <th asp-display-name-for="Data.Instructors[0].FirstMidName"></th>
             <th asp-display-name-for="Data.Instructors[0].HireDate"></th>
             <th asp-display-name-for="Data.Instructors[0].OfficeAssignmentLocation"></th>
-            <th asp-display-name-for="Data.Instructors[0].CourseAssignments"></th>
+            <th asp-display-name-for="Data.Instructors[0].Courses"></th>
             <th></th>
         </tr>
     </thead>
@@ -36,7 +36,7 @@
                 <td asp-display-for="@item.OfficeAssignmentLocation"></td>
                 <td>
                     @{
-                        foreach (var course in item.CourseAssignments)
+                        foreach (var course in item.Courses)
                         {
                             @course.CourseId @:  @course.CourseTitle <br />
                         }

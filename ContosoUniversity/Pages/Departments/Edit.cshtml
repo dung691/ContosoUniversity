@@ -15,25 +15,25 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Data.Id" />
             <div class="form-floating mb-3">
+                <input asp-for="Data.Name" class="form-control" placeholder="Enter name" />
                 <label asp-for="Data.Name" class="form-label"></label>
-                <input asp-for="Data.Name" class="form-control" />
                 <span asp-validation-for="Data.Name" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
+                <input asp-for="Data.Budget" class="form-control" placeholder="Enter budget" />
                 <label asp-for="Data.Budget" class="form-label"></label>
-                <input asp-for="Data.Budget" class="form-control" />
                 <span asp-validation-for="Data.Budget" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
+                <input asp-for="Data.StartDate" class="form-control datepicker" placeholder="Enter start date" />
                 <label asp-for="Data.StartDate" class="form-label"></label>
-                <input asp-for="Data.StartDate" class="form-control" />
                 <span asp-validation-for="Data.StartDate" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
-                <label asp-for="Data.InstructorId" class="form-label"></label>
                 <select asp-for="Data.InstructorId" class="form-select">
                     <option value="">-- Select Administrator --</option>
                 </select>
+                <label asp-for="Data.InstructorId" class="form-label"></label>
                 <span asp-validation-for="Data.InstructorId" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">

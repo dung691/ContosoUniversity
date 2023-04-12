@@ -56,7 +56,7 @@ public class Delete : PageModel
         public string FirstMidName { get; init; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
-        public DateTime? HireDate { get; init; }
+        public DateOnly? HireDate { get; init; }
 
         [Display(Name = "Location")]
         public string OfficeAssignmentLocation { get; init; }

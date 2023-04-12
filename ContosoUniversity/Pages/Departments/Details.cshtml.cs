@@ -32,7 +32,7 @@ public class Details : PageModel
 
         public decimal Budget { get; init; }
 
-        public DateTime StartDate { get; init; }
+        public DateOnly StartDate { get; init; }
 
         public int Id { get; init; }
 

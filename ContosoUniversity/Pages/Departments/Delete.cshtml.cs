@@ -43,7 +43,7 @@ public class Delete : PageModel
         public int Id { get; init; }
         public string Name { get; init; }
         public decimal Budget { get; init; }
-        public DateTime StartDate { get; init; }
+        public DateOnly StartDate { get; init; }
         [Display(Name = "Administrator")]
         public string? AdministratorFullName { get; init; }
     }
