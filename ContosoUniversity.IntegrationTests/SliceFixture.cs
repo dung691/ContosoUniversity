@@ -28,14 +28,15 @@ public class SliceFixture : IAsyncLifetime
         {
             builder.ConfigureAppConfiguration((_, configBuilder) =>
             {
+                var envConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:SchoolContext");
                 configBuilder.AddInMemoryCollection(new[]
                 {
-                    new KeyValuePair<string, string?>("ConnectionStrings:SchoolContext", _connectionString)
+                    new KeyValuePair<string, string?>("ConnectionStrings:SchoolContext", envConnectionString ?? _connectionString)
                 });
             });
         }
 
-        private readonly string _connectionString = "Server=.;Database=ContosoUniversityDotNetCore-Pages-Tests;User Id=sa;Password=123@123a;Encrypt=False;";
+        private readonly string _connectionString = "Server=.;Database=ContosoUniversity-Tests;User Id=sa;Password=123@123a;Encrypt=False;";
     }
 
     public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
