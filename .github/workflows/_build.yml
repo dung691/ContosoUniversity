@@ -1,5 +1,8 @@
 name: Build
 
+env:
+  ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
+
 on:
   workflow_call:
     inputs:
@@ -43,9 +46,6 @@ jobs:
         buildNumber=$now.$GITHUB_RUN_NUMBER
         echo "BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
         echo "$buildNumber"
-        
-      env:
-        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
 
     - name: Test
       run: dotnet test -c Release --no-restore --no-build
