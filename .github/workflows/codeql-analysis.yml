@@ -22,8 +22,18 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@main
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@main
+    #- name: Autobuild
+    #  uses: github/codeql-action/autobuild@main
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@main
