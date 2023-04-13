@@ -80,7 +80,7 @@ public class EditTests
             {
                 Id = dept.Id,
                 Name = "English",
-                InstructorId = admin2.Id,
+                InstructorId = admin2!.Id,
                 StartDate = DateOnly.FromDateTime(DateTime.Today).AddDays(-1),
                 Budget = 456m
             };

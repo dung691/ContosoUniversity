@@ -166,7 +166,7 @@ public class SliceFixture : IAsyncLifetime
         });
     }
 
-    public Task<T> FindAsync<T>(int id)
+    public Task<T?> FindAsync<T>(int id)
         where T : class
     {
         return ExecuteDbContextAsync(db => db.Set<T>().FindAsync(id).AsTask());

@@ -42,7 +42,7 @@ public class DetailsTests
 
         result.ShouldNotBeNull();
         result.Name.ShouldBe(dept.Name);
-        result.AdministratorFullName.ShouldBe(admin.FullName);
+        result.AdministratorFullName.ShouldBe(admin!.FullName);
     }
 
 }
