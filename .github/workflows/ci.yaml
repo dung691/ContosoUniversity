@@ -11,6 +11,7 @@ jobs:
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
+      id: stepid
       with:
         dotnet-version: 8.0.x
     
@@ -24,5 +25,5 @@ jobs:
 
     - name: dotnet test
       env:
-        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;
+        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
       run: dotnet test ContosoUniversity.sln -c Release --no-build
