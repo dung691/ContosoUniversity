@@ -15,5 +15,3 @@ jobs:
   build:
     name: Build & Test
     uses: ./.github/workflows/_build.yml
-    with:
-      packShipCandidate: true

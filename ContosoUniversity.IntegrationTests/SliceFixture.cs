@@ -26,17 +26,16 @@ public class SliceFixture : IAsyncLifetime
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureAppConfiguration((_, configBuilder) =>
+            builder.ConfigureAppConfiguration(configurationBuilder =>
             {
-                var envConnectionString = Environment.GetEnvironmentVariable("ConnectionStrings:SchoolContext");
-                configBuilder.AddInMemoryCollection(new[]
-                {
-                    new KeyValuePair<string, string?>("ConnectionStrings:SchoolContext", envConnectionString ?? _connectionString)
-                });
+                var integrationConfig = new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .AddEnvironmentVariables()
+                    .Build();
+
+                configurationBuilder.AddConfiguration(integrationConfig);
             });
         }
-
-        private readonly string _connectionString = "Server=.;Database=ContosoUniversity-Tests;User Id=sa;Password=123@123a;Encrypt=False;";
     }
 
     public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)

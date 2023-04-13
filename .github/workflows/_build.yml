@@ -1,24 +1,18 @@
 name: Build
 
-env:
-  ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
-
 on:
   workflow_call:
-    inputs:
-      versionSuffix:
-        required: false
-        type: string
-        default: ci
-      packShipCandidate:
-        required: false
-        type: boolean
-        default: false
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build package
+    name: Build & Test
 
     services:
       sqlserver:
@@ -37,7 +31,7 @@ jobs:
       with:
         dotnet-version: 8.0.x
     
-    - name: Restore dependencies
+    - name: Restore
       run: dotnet restore
 
     - name: Create build number
@@ -47,12 +41,10 @@ jobs:
         echo "BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
         echo "$buildNumber"
 
+    - name: Build
+      run: dotnet build --configuration Release --no-restore -p:BuildNumber=$BUILD_NUMBER -p:SourceRevisionId=$GITHUB_SHA -p:ContinuousIntegrationBuild=true
+
     - name: Test
       run: dotnet test -c Release --no-restore --no-build
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@master
-      with:
-        name: test-results
-        path: artifacts/TestResults
-        retention-days: 5
+      env:
+        ConnectionStrings__SchoolContext: Server=.;Database=ContosoUniversity-Tests;User=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
