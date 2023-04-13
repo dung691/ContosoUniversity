@@ -16,7 +16,7 @@ public class Create : PageModel
     private readonly IMediator _mediator;
 
     [BindProperty]
-    public Command Data { get; set; }
+    public required Command Data { get; set; }
 
     public Create(IMediator mediator) => _mediator = mediator;
 

@@ -14,27 +14,33 @@ public class Index : PageModel
 
     public Index(IMediator mediator) => _mediator = mediator;
 
-    public Result Data { get; private set; }
+    public required Result Data { get; set; }
 
     public async Task OnGetAsync(string sortOrder,
-        string currentFilter, string searchString, int? pageIndex)
-        => Data = await _mediator.Send(new Query { CurrentFilter = currentFilter, Page = pageIndex, SearchString = searchString, SortOrder = sortOrder});
+        string currentFilter, string searchString, int? pageIndex, CancellationToken cancellationToken)
+        => Data = await _mediator.Send(new Query
+        {
+            CurrentFilter = currentFilter,
+            Page = pageIndex, 
+            SearchString = searchString, 
+            SortOrder = sortOrder
+        }, cancellationToken);
 
     public record Query : IRequest<Result>
     {
-        public string SortOrder { get; init; }
-        public string CurrentFilter { get; init; }
-        public string SearchString { get; init; }
+        public string? SortOrder { get; init; }
+        public string? CurrentFilter { get; init; }
+        public string? SearchString { get; init; }
         public int? Page { get; init; }
     }
 
     public record Result
     {
-        public string CurrentSort { get; init; }
-        public string NameSortParm { get; init; }
-        public string DateSortParm { get; init; }
-        public string CurrentFilter { get; init; }
-        public string SearchString { get; init; }
+        public string? CurrentSort { get; init; }
+        public string? NameSortParm { get; init; }
+        public string? DateSortParm { get; init; }
+        public string? CurrentFilter { get; init; }
+        public string? SearchString { get; init; }
 
         public PaginatedList<Model> Results { get; init; }
     }

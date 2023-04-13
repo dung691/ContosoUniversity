@@ -17,9 +17,18 @@ public class Delete : PageModel
     public Delete(IMediator mediator) => _mediator = mediator;
 
     [BindProperty]
-    public Command Data { get; set; }
+    public required Command Data { get; set; }
 
-    public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
+    public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
+    {
+        var student = await _mediator.Send(query, cancellationToken);
+
+        if (student is null) return NotFound();
+
+        Data = student;
+
+        return Page();
+    }
 
     public async Task<IActionResult> OnPostAsync()
     {
@@ -32,7 +41,7 @@ public class Delete : PageModel
         return Page();
     }
 
-    public record Query : IRequest<Command>
+    public record Query : IRequest<Command?>
     {
         public int Id { get; init; }
     }
@@ -51,7 +60,7 @@ public class Delete : PageModel
         public MappingProfile() => CreateProjection<Student, Command>();
     }
 
-    public class QueryHandler : IRequestHandler<Query, Command>
+    public class QueryHandler : IRequestHandler<Query, Command?>
     {
         private readonly SchoolContext _db;
         private readonly AutoMapper.IConfigurationProvider _configuration;
@@ -62,7 +71,7 @@ public class Delete : PageModel
             _configuration = configuration;
         }
 
-        public async Task<Command> Handle(Query message, CancellationToken token) => await _db
+        public async Task<Command?> Handle(Query message, CancellationToken token) => await _db
             .Students
             .Where(s => s.Id == message.Id)
             .ProjectTo<Command>(_configuration)
@@ -77,7 +86,9 @@ public class Delete : PageModel
 
         public async Task Handle(Command message, CancellationToken token)
         {
-            _db.Students.Remove(await _db.Students.FindAsync(message.Id));
+            var student = await _db.Students.FindAsync(new object?[] { message.Id }, token);
+            if (student is not null)
+                _db.Students.Remove(student);
         }
     }
 

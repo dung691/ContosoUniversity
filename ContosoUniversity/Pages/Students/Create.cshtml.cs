@@ -15,15 +15,15 @@ public class Create : PageModel
     public Create(IMediator mediator) => _mediator = mediator;
 
     [BindProperty]
-    public Command Data { get; set; }
+    public required Command Data { get; set; }
 
     public void OnGet() => Data = new Command();
 
-    public async Task<IActionResult> OnPostAsync()
+    public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data);
+            await _mediator.Send(Data, cancellationToken);
             return RedirectToPage(nameof(Index));
         }
 
@@ -37,6 +37,7 @@ public class Create : PageModel
         [Display(Name = "First Name")]
         public string FirstMidName { get; init; }
 
+        [DataType(DataType.Date)]
         public DateOnly? EnrollmentDate { get; init; }
     }
 

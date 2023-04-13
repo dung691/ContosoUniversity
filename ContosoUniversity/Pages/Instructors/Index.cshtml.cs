@@ -63,10 +63,10 @@ public class Index : PageModel
     public Index(IMediator mediator) 
         => _mediator = mediator;
 
-    public Model Data { get; private set; }
+    public required Model Data { get; set; }
 
-    public async Task OnGetAsync(Query query)
-        => Data = await _mediator.Send(query);
+    public async Task OnGetAsync(Query query, CancellationToken cancellationToken)
+        => Data = await _mediator.Send(query, cancellationToken);
 
     public record Query : IRequest<Model>
     {
@@ -79,9 +79,9 @@ public class Index : PageModel
         public int? InstructorId { get; init; }
         public int? CourseId { get; init; }
 
-        public IList<Instructor> Instructors { get; init; }
-        public IList<Course> Courses { get; init; }
-        public IList<Enrollment> Enrollments { get; init; }
+        public IList<Instructor> Instructors { get; init; } = new List<Instructor>();
+        public IList<Course> Courses { get; init; } = new List<Course>();
+        public IList<Enrollment> Enrollments { get; init; } = new List<Enrollment>();
 
         public record Instructor
         {
@@ -100,7 +100,7 @@ public class Index : PageModel
             [DisplayName("Office")]
             public string OfficeAssignmentLocation { get; init; }
             [DisplayName("Courses")]
-            public IEnumerable<CourseAssignment> Courses { get; init; }
+            public IEnumerable<CourseAssignment> Courses { get; init; } = Enumerable.Empty<CourseAssignment>();
         }
 
         public record CourseAssignment
@@ -155,25 +155,17 @@ public class Index : PageModel
         public async Task<Model> Handle(Query message, CancellationToken token)
         {
             var instructors = await _db.Instructors
-                    .Include(i => i.Courses)
                     .OrderBy(i => i.LastName)
                     .ProjectTo<Model.Instructor>(_configuration)
                     .ToListAsync(token)
                 ;
-
-            // EF Core cannot project child collections w/o Include
-            // See https://github.com/aspnet/EntityFrameworkCore/issues/9128
-            //var instructors = await _db.Instructors
-            //    .OrderBy(i => i.LastName)
-            //    .ProjectToListAsync<Model.Instructor>();
-
+            
             var courses = new List<Model.Course>();
             var enrollments = new List<Model.Enrollment>();
 
             if (message.Id != null)
             {
                 courses = await _db.Courses
-                    .Include(ci => ci.Instructors)
                     .Where(ci => ci.Instructors.Any(i => i.Id == message.Id))
                     .ProjectTo<Model.Course>(_configuration)
                     .ToListAsync(token);

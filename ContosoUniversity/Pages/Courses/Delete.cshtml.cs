@@ -18,15 +18,17 @@ public class Delete : PageModel
     public Delete(IMediator mediator) => _mediator = mediator;
 
     [BindProperty]
-    public Command? Data { get; set; }
+    public required Command Data { get; set; }
 
     public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
     {
-        if (!query.Id.HasValue) return NotFound();
+        if (!ModelState.IsValid) return NotFound();
 
-        Data = await _mediator.Send(query, cancellationToken);
+        var course = await _mediator.Send(query, cancellationToken);
 
-        if (Data is null) return NotFound();
+        if (course is null) return NotFound();
+
+        Data = course;
 
         return Page();
     }
@@ -58,7 +60,8 @@ public class Delete : PageModel
     public class MappingProfile : Profile
     {
         public MappingProfile() => CreateProjection<Course, Command>()
-            .ForMember(x => x.DepartmentName, o => o.MapFrom(r => r.Department.Name));
+            .ForMember(d => d.DepartmentName, 
+                opt => opt.MapFrom(s => s.Department == null ? null : s.Department.Name));
     }
 
     public class QueryHandler : IRequestHandler<Query, Command?>

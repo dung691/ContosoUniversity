@@ -21,6 +21,6 @@ public class Department
 
     public int? InstructorId { get; set; }
 
-    public Instructor Administrator { get; set; }
+    public Instructor? Administrator { get; set; }
     public List<Course> Courses { get; set; } = new();
 }

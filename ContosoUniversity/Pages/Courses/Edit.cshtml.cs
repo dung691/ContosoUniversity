@@ -18,7 +18,7 @@ public class Edit : PageModel
     private readonly IMediator _mediator;
 
     [BindProperty]
-    public Command? Data { get; set; }
+    public required Command Data { get; set; }
 
     public Edit(IMediator mediator) => _mediator = mediator;
 
@@ -26,9 +26,11 @@ public class Edit : PageModel
     {
         if (!ModelState.IsValid) return NotFound();
 
-        Data = await _mediator.Send(query, cancellationToken);
+        var course = await _mediator.Send(query, cancellationToken);
 
-        if (Data is null) return NotFound();
+        if (course is null) return NotFound();
+
+        Data = course;
 
         return Page();
     }
@@ -37,7 +39,7 @@ public class Edit : PageModel
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data!, cancellationToken);
+            await _mediator.Send(Data, cancellationToken);
             return RedirectToPage(nameof(System.Index));
         }
 

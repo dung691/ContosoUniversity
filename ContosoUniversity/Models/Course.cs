@@ -17,7 +17,7 @@ public class Course
 
     public int DepartmentId { get; set; }
 
-    public Department Department { get; set; }
+    public Department? Department { get; set; }
     public List<Enrollment> Enrollments { get; set; } = new();
     public List<Instructor> Instructors { get; set; } = new();
 }

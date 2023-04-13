@@ -4,6 +4,7 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 
 namespace ContosoUniversity.Pages.Courses;
 
@@ -13,15 +14,15 @@ public class Index : PageModel
 
     public Index(IMediator mediator) => _mediator = mediator;
 
-    public Result Data { get; private set; } = default!;
+    public required Result Data { get; set; }
 
-    public async Task OnGetAsync() => Data = await _mediator.Send(new Query());
+    public async Task OnGetAsync(CancellationToken cancellationToken) => Data = await _mediator.Send(new Query(), cancellationToken);
 
     public record Query : IRequest<Result>;
 
     public record Result
     {
-        public List<Course> Courses { get; init; } = default!;
+        public List<Course> Courses { get; init; } = new();
 
         public record Course
         {
@@ -36,7 +37,9 @@ public class Index : PageModel
     public class MappingProfile : Profile
     {
         public MappingProfile() => CreateProjection<Course, Result.Course>()
-            .ForMember(x => x.DepartmentName, o => o.MapFrom(r => r.Department.Name));
+            .ForMember(
+                d => d.DepartmentName, 
+                opt => opt.MapFrom(s => s.Department != null ? s.Department.Name : null));
     }
 
     public class QueryHandler : IRequestHandler<Query, Result>
@@ -54,6 +57,7 @@ public class Index : PageModel
         {
             var courses = await _db.Courses
                 .OrderBy(d => d.Id)
+                .Include(d => d.Department)
                 .ProjectToListAsync<Result.Course>(_configuration);
 
             return new Result

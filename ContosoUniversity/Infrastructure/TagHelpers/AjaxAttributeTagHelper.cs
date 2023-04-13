@@ -15,17 +15,17 @@ namespace ContosoUniversity.Infrastructure.TagHelpers;
 public partial class AjaxAttributeTagHelper : TagHelper
 {
     private const string AjaxAttributeName = "asp-ajax";
-    public const string AjaxConfirmAttributeName = "asp-ajax-confirm";
-    public const string AjaxMethodAttributeName = "asp-ajax-method";
-    public const string AjaxUpdateElementAttributeName = "asp-ajax-update";
-    public const string AjaxModeAttributeName = "asp-ajax-mode";
-    public const string AjaxLoadingElementAttributeName = "asp-ajax-loading";
-    public const string AjaxLoadingElementDurationAttributeName = "asp-ajax-loading-duration";
-    public const string AjaxSuccessAttributeName = "asp-ajax-success";
-    public const string AjaxFailureAttributeName = "asp-ajax-failure";
-    public const string AjaxBeginAttributeName = "asp-ajax-begin";
-    public const string AjaxCompleteAttributeName = "asp-ajax-complete";
-    public const string AjaxUrlAttributeName = "asp-ajax-url";
+    private const string AjaxConfirmAttributeName = "asp-ajax-confirm";
+    private const string AjaxMethodAttributeName = "asp-ajax-method";
+    private const string AjaxUpdateElementAttributeName = "asp-ajax-update";
+    private const string AjaxModeAttributeName = "asp-ajax-mode";
+    private const string AjaxLoadingElementAttributeName = "asp-ajax-loading";
+    private const string AjaxLoadingElementDurationAttributeName = "asp-ajax-loading-duration";
+    private const string AjaxSuccessAttributeName = "asp-ajax-success";
+    private const string AjaxFailureAttributeName = "asp-ajax-failure";
+    private const string AjaxBeginAttributeName = "asp-ajax-begin";
+    private const string AjaxCompleteAttributeName = "asp-ajax-complete";
+    private const string AjaxUrlAttributeName = "asp-ajax-url";
 
     /// <summary>
     /// Must be set to true to activate unobtrusive Ajax on the target element.

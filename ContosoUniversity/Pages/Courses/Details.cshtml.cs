@@ -17,13 +17,15 @@ public class Details : PageModel
 
     public Details(IMediator mediator) => _mediator = mediator;
 
-    public Model? Data { get; private set; }
+    public required Model Data { get; set; }
 
     public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
     {
-        if (!query.Id.HasValue) return NotFound();
-        Data = await _mediator.Send(query, cancellationToken);
-        if (Data is null) return NotFound();
+        if (!ModelState.IsValid) return NotFound();
+        var course = await _mediator.Send(query, cancellationToken);
+        if (course is null) return NotFound();
+
+        Data = course;
 
         return Page();
     }
@@ -53,7 +55,8 @@ public class Details : PageModel
     public class MappingProfile : Profile
     {
         public MappingProfile() => CreateProjection<Course, Model>()
-            .ForMember(x => x.DepartmentName, o => o.MapFrom(r => r.Department.Name));
+            .ForMember(d => d.DepartmentName, 
+                opt => opt.MapFrom(s => s.Department == null ? null : s.Department.Name));
     }
 
     public class QueryHandler : IRequestHandler<Query, Model?>
@@ -69,7 +72,7 @@ public class Details : PageModel
 
         public Task<Model?> Handle(Query message, CancellationToken token) =>
             _db.Courses
-                .Where(i => i.Id == message.Id)
+                .Where(c => c.Id == message.Id)
                 .ProjectTo<Model?>(_configuration)
                 .SingleOrDefaultAsync(token);
     }

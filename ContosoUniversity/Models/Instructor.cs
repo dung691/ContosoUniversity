@@ -11,13 +11,13 @@ public class Instructor
     [Required]
     [Display(Name = "Last Name")]
     [StringLength(50)]
-    public string LastName { get; set; }
+    public string LastName { get; set; } = default!;
 
     [Required]
     [Column("FirstName")]
     [Display(Name = "First Name")]
     [StringLength(50)]
-    public string FirstMidName { get; set; }
+    public string FirstMidName { get; set; } = default!;
 
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
@@ -38,7 +38,7 @@ public class Instructor
         UpdateInstructorCourses(message.SelectedCourses, courses);
     }
 
-    public void Handle(Delete.Command message) => OfficeAssignment = null;
+    public void Handle(Delete.Command _) => OfficeAssignment = null;
 
     private void UpdateDetails(CreateEdit.Command message)
     {
@@ -71,20 +71,19 @@ public class Instructor
         }
 
         var selectedCoursesHs = new HashSet<string>(selectedCourses);
-        var instructorCourses = new HashSet<int>(Courses.Select(c => c.Id));
-
+        
         foreach (var course in courses)
         {
             if (selectedCoursesHs.Contains(course.Id.ToString()))
             {
-                if (!instructorCourses.Contains(course.Id))
+                if (!Courses.Contains(course))
                 {
                     Courses.Add(course);
                 }
             }
             else
             {
-                if (instructorCourses.Contains(course.Id))
+                if (Courses.Contains(course))
                 {
                     var toRemove = Courses.Single(ci => ci.Id == course.Id);
                     Courses.Remove(toRemove);

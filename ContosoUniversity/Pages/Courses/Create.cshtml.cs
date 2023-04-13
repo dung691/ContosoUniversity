@@ -5,7 +5,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
 
 namespace ContosoUniversity.Pages.Courses;
 
@@ -16,7 +15,7 @@ public class Create : PageModel
     public Create(IMediator mediator) => _mediator = mediator;
 
     [BindProperty]
-    public Command Data { get; set; } = default!;
+    public required Command Data { get; set; }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
     {

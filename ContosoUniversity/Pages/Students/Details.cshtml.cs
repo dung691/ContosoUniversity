@@ -4,6 +4,7 @@ using AutoMapper.QueryableExtensions;
 using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,12 +16,19 @@ public class Details : PageModel
 
     public Details(IMediator mediator) => _mediator = mediator;
 
-    public Model Data { get; private set; }
+    public required Model Data { get; set; }
 
-    public async Task OnGetAsync(Query query)
-        => Data = await _mediator.Send(query);
+    public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
+    {
+        var student = await _mediator.Send(query, cancellationToken);
+        if (student is null) return NotFound();
 
-    public record Query : IRequest<Model>
+        Data = student;
+
+        return Page();
+    }
+
+    public record Query : IRequest<Model?>
     {
         public int Id { get; init; }
     }
@@ -32,7 +40,7 @@ public class Details : PageModel
         public string FirstMidName { get; init; }
         public string LastName { get; init; }
         public DateOnly EnrollmentDate { get; init; }
-        public List<Enrollment> Enrollments { get; init; }
+        public List<Enrollment> Enrollments { get; init; } = new();
 
         public record Enrollment
         {
@@ -50,7 +58,7 @@ public class Details : PageModel
         }
     }
 
-    public class QueryHandler : IRequestHandler<Query, Model>
+    public class QueryHandler : IRequestHandler<Query, Model?>
     {
         private readonly SchoolContext _db;
         private readonly AutoMapper.IConfigurationProvider _configuration;
@@ -61,10 +69,10 @@ public class Details : PageModel
             _configuration = configuration;
         }
 
-        public Task<Model> Handle(Query message, CancellationToken token) => _db
+        public Task<Model?> Handle(Query message, CancellationToken token) => _db
             .Students
             .Where(s => s.Id == message.Id)
-            .ProjectTo<Model>(_configuration)
+            .ProjectTo<Model?>(_configuration)
             .SingleOrDefaultAsync(token);
     }
 }

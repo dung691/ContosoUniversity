@@ -16,37 +16,49 @@ public class CreateEdit : PageModel
     private readonly IMediator _mediator;
 
     [BindProperty]
-    public Command Data { get; set; }
+    public required Command Data { get; set; }
 
     public CreateEdit(IMediator mediator) => _mediator = mediator;
 
-    public async Task OnGetCreateAsync() => Data = await _mediator.Send(new Query());
+    public async Task OnGetCreateAsync(CancellationToken cancellationToken)
+    {
+        Data = (await _mediator.Send(new Query(), cancellationToken))!;
+    }
 
-    public async Task<IActionResult> OnPostCreateAsync()
+    public async Task<IActionResult> OnPostCreateAsync(CancellationToken cancellationToken)
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data);
+            await _mediator.Send(Data, cancellationToken);
             return RedirectToPage(nameof(Index));
         }
 
         return Page();
     }
 
-    public async Task OnGetEditAsync(Query query) => Data = await _mediator.Send(query);
+    public async Task<IActionResult> OnGetEditAsync(Query query, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid) return BadRequest();
+        var instructor = await _mediator.Send(query, cancellationToken);
+        if (instructor is null) return NotFound();
 
-    public async Task<IActionResult> OnPostEditAsync()
+        Data = instructor;
+
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostEditAsync(CancellationToken cancellationToken)
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data);
+            await _mediator.Send(Data, cancellationToken);
             return RedirectToPage(nameof(Index));
         }
 
         return Page();
     }
 
-    public record Query : IRequest<Command>
+    public record Query : IRequest<Command?>
     {
         public int? Id { get; init; }
     }
@@ -67,11 +79,12 @@ public class CreateEdit : PageModel
         [Display(Name = "First Name")]
         public string FirstMidName { get; init; }
 
+        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateOnly? HireDate { get; init; }
 
         [Display(Name = "Location")]
-        public string OfficeAssignmentLocation { get; init; }
+        public string? OfficeAssignmentLocation { get; init; }
 
         public string[] SelectedCourses { get; init; } = Array.Empty<string>();
 
@@ -81,7 +94,7 @@ public class CreateEdit : PageModel
         public record AssignedCourseData
         {
             public int CourseId { get; init; }
-            public string Title { get; init; }
+            public string? Title { get; init; }
             public bool Assigned { get; init; }
         }
 
@@ -113,7 +126,7 @@ public class CreateEdit : PageModel
         }
     }
 
-    public class QueryHandler : IRequestHandler<Query, Command>
+    public class QueryHandler : IRequestHandler<Query, Command?>
     {
         private readonly SchoolContext _db;
         private readonly AutoMapper.IConfigurationProvider _configuration;
@@ -124,9 +137,9 @@ public class CreateEdit : PageModel
             _configuration = configuration;
         }
 
-        public async Task<Command> Handle(Query message, CancellationToken token)
+        public async Task<Command?> Handle(Query message, CancellationToken token)
         {
-            Command model;
+            Command? model;
             if (message.Id == null)
             {
                 model = new Command();
@@ -136,16 +149,18 @@ public class CreateEdit : PageModel
                 model = await _db.Instructors
                     .Include(i => i.Courses)
                     .Where(i => i.Id == message.Id)
-                    .ProjectTo<Command>(_configuration)
+                    .ProjectTo<Command?>(_configuration)
                     .SingleOrDefaultAsync(token);
             }
 
-            var instructorCourses = model.Courses.Select(c => c.CourseId);
+            if (model is null) return null;
+
+            var instructorCourses = model.Courses.Select(c => c.CourseId).ToList();
             var viewModel = await _db.Courses.Select(course => new Command.AssignedCourseData
             {
                 CourseId = course.Id,
                 Title = course.Title,
-                Assigned = instructorCourses.Any() && instructorCourses.Contains(course.Id)
+                Assigned = instructorCourses.Count != 0 && instructorCourses.Contains(course.Id)
             }).ToListAsync(token);
 
             model = model with { AssignedCourses = viewModel };

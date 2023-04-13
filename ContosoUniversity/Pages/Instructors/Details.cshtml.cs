@@ -5,6 +5,7 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +17,22 @@ public class Details : PageModel
 
     public Details(IMediator mediator) => _mediator = mediator;
 
-    public Model Data { get; private set; }
+    public required Model Data { get; set; }
 
-    public async Task OnGetAsync(Query query) => Data = await _mediator.Send(query);
+    public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid) return BadRequest();
 
-    public record Query : IRequest<Model>
+        var instructor = await _mediator.Send(query, cancellationToken);
+
+        if (instructor is null) return NotFound();
+
+        Data = instructor;
+
+        return Page();
+    }
+
+    public record Query : IRequest<Model?>
     {
         public int? Id { get; init; }
     }
@@ -53,7 +65,7 @@ public class Details : PageModel
         public MappingProfile() => CreateProjection<Instructor, Model>();
     }
 
-    public class QueryHandler : IRequestHandler<Query, Model>
+    public class QueryHandler : IRequestHandler<Query, Model?>
     {
         private readonly SchoolContext _db;
         private readonly AutoMapper.IConfigurationProvider _configuration;
@@ -64,10 +76,10 @@ public class Details : PageModel
             _configuration = configuration;
         }
 
-        public Task<Model> Handle(Query message, CancellationToken token) => _db
+        public Task<Model?> Handle(Query message, CancellationToken token) => _db
             .Instructors
             .Where(i => i.Id == message.Id)
-            .ProjectTo<Model>(_configuration)
+            .ProjectTo<Model?>(_configuration)
             .SingleOrDefaultAsync(token);
     }
 }

@@ -18,23 +18,33 @@ public class Delete : PageModel
     public Delete(IMediator mediator) => _mediator = mediator;
 
     [BindProperty]
-    public Command Data { get; set; }
+    public required Command Data { get; set; }
 
-    public async Task OnGetAsync(Query query)
-        => Data = await _mediator.Send(query);
+    public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid) return BadRequest();
 
-    public async Task<ActionResult> OnPostAsync()
+        var instructor = await _mediator.Send(query, cancellationToken);
+
+        if (instructor is null) return NotFound();
+
+        Data = instructor;
+
+        return Page();
+    }
+
+    public async Task<ActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data);
+            await _mediator.Send(Data, cancellationToken);
             return RedirectToPage(nameof(Index));
         }
 
         return Page();
     }
 
-    public record Query : IRequest<Command>
+    public record Query : IRequest<Command?>
     {
         public int? Id { get; init; }
     }
@@ -67,7 +77,7 @@ public class Delete : PageModel
         public MappingProfile() => CreateProjection<Instructor, Command>();
     }
 
-    public class QueryHandler : IRequestHandler<Query, Command>
+    public class QueryHandler : IRequestHandler<Query, Command?>
     {
         private readonly SchoolContext _db;
         private readonly AutoMapper.IConfigurationProvider _configuration;
@@ -78,10 +88,10 @@ public class Delete : PageModel
             _configuration = configuration;
         }
 
-        public Task<Command> Handle(Query message, CancellationToken token) => _db
+        public Task<Command?> Handle(Query message, CancellationToken token) => _db
             .Instructors
             .Where(i => i.Id == message.Id)
-            .ProjectTo<Command>(_configuration)
+            .ProjectTo<Command?>(_configuration)
             .SingleOrDefaultAsync(token);
     }
 

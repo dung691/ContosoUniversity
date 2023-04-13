@@ -16,14 +16,12 @@ public class Index : PageModel
 
     public Index(IMediator mediator) => _mediator = mediator;
 
-    public List<Model> Data { get; private set; }
+    public required List<Model> Data { get; set; }
 
-    public async Task OnGetAsync()
-        => Data = await _mediator.Send(new Query());
+    public async Task OnGetAsync(CancellationToken cancellationToken)
+        => Data = await _mediator.Send(new Query(), cancellationToken);
 
-    public record Query : IRequest<List<Model>>
-    {
-    }
+    public record Query : IRequest<List<Model>>;
 
     public record Model
     {
@@ -35,12 +33,14 @@ public class Index : PageModel
 
         public int Id { get; init; }
         [DisplayName("Administrator")]
-        public string AdministratorFullName { get; init; }
+        public string? AdministratorFullName { get; init; }
     }
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateProjection<Department, Model>();
+        public MappingProfile() => CreateProjection<Department, Model>()
+            .ForMember(d => d.AdministratorFullName,
+                opt => opt.MapFrom(s => s.Administrator == null ? null : s.Administrator.FullName));
     }
 
     public class QueryHandler : IRequestHandler<Query, List<Model>>

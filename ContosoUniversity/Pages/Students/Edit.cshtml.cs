@@ -18,23 +18,32 @@ public class Edit : PageModel
     public Edit(IMediator mediator) => _mediator = mediator;
 
     [BindProperty]
-    public Command Data { get; set; }
+    public required Command Data { get; set; }
 
-    public async Task OnGetAsync(Query query)
-        => Data = await _mediator.Send(query);
+    public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
+    {
+        if (!ModelState.IsValid) return BadRequest();
 
-    public async Task<IActionResult> OnPostAsync()
+        var student = await _mediator.Send(query, cancellationToken);
+        if (student is null) return NotFound();
+
+        Data = student;
+
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data);
+            await _mediator.Send(Data, cancellationToken);
             return RedirectToPage(nameof(Index));
         }
 
         return Page();
     }
 
-    public record Query : IRequest<Command>
+    public record Query : IRequest<Command?>
     {
         public int? Id { get; init; }
     }
@@ -54,7 +63,7 @@ public class Edit : PageModel
 
         [Display(Name = "First Name")]
         public string FirstMidName { get; init; }
-
+        [DataType(DataType.Date)]
         public DateOnly? EnrollmentDate { get; init; }
     }
 
@@ -73,7 +82,7 @@ public class Edit : PageModel
         public MappingProfile() => CreateProjection<Student, Command>();
     }
 
-    public class QueryHandler : IRequestHandler<Query, Command>
+    public class QueryHandler : IRequestHandler<Query, Command?>
     {
         private readonly SchoolContext _db;
         private readonly AutoMapper.IConfigurationProvider _configuration;
@@ -84,7 +93,7 @@ public class Edit : PageModel
             _configuration = configuration;
         }
 
-        public async Task<Command> Handle(Query message, CancellationToken token) => await _db.Students
+        public async Task<Command?> Handle(Query message, CancellationToken token) => await _db.Students
             .Where(s => s.Id == message.Id)
             .ProjectTo<Command>(_configuration)
             .SingleOrDefaultAsync(token);

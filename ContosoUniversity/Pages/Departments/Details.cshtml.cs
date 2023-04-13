@@ -5,6 +5,7 @@ using ContosoUniversity.Data;
 using ContosoUniversity.Models;
 using DelegateDecompiler.EntityFrameworkCore;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,14 +15,22 @@ public class Details : PageModel
 {
     private readonly IMediator _mediator;
 
-    public Model Data { get; private set; }
+    public required Model Data { get; set; }
 
     public Details(IMediator mediator) => _mediator = mediator;
 
-    public async Task OnGetAsync(Query query)
-        => Data = await _mediator.Send(query);
+    public async Task<IActionResult> OnGetAsync(Query query, CancellationToken cancellationToken)
+    {
+        var department = await _mediator.Send(query, cancellationToken);
 
-    public record Query : IRequest<Model>
+        if (department is null) return NotFound();
+
+        Data = department;
+
+        return Page();
+    }
+
+    public record Query : IRequest<Model?>
     {
         public int Id { get; init; }
     }
@@ -37,15 +46,17 @@ public class Details : PageModel
         public int Id { get; init; }
 
         [Display(Name = "Administrator")]
-        public string AdministratorFullName { get; init; }
+        public string? AdministratorFullName { get; init; }
     }
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateProjection<Department, Model>();
+        public MappingProfile() => CreateProjection<Department, Model>()
+            .ForMember(d => d.AdministratorFullName,
+                opt => opt.MapFrom(s => s.Administrator == null ? null : s.Administrator.FullName));
     }
         
-    public class QueryHandler : IRequestHandler<Query, Model>
+    public class QueryHandler : IRequestHandler<Query, Model?>
     {
         private readonly SchoolContext _db;
         private readonly AutoMapper.IConfigurationProvider _configuration;
@@ -56,11 +67,10 @@ public class Details : PageModel
             _configuration = configuration;
         }
 
-        public Task<Model> Handle(Query message, 
-            CancellationToken token) => 
+        public Task<Model?> Handle(Query message, CancellationToken token) => 
             _db.Departments
                 .Where(m => m.Id == message.Id)
-                .ProjectTo<Model>(_configuration)
+                .ProjectTo<Model?>(_configuration)
                 .DecompileAsync()
                 .SingleOrDefaultAsync(token);
     }

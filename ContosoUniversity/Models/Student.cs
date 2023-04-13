@@ -6,15 +6,17 @@ namespace ContosoUniversity.Models;
 public class Student
 {
     public int Id { get; set; }
+
     [Required]
     [StringLength(50)]
     [Display(Name = "Last Name")]
-    public string LastName { get; set; }
+    public string LastName { get; set; } = default!;
+
     [Required]
     [StringLength(50)]
     [Column("FirstName")]
     [Display(Name = "First Name")]
-    public string FirstMidName { get; set; }
+    public string FirstMidName { get; set; } = default!;
     [DataType(DataType.Date)]
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     [Display(Name = "Enrollment Date")]
