@@ -48,7 +48,7 @@ public class Delete : PageModel
     public record Command : IRequest
     {
         public int Id { get; init; }
-        public string Name { get; init; }
+        public string Name { get; init; } = default!;
         public decimal Budget { get; init; }
         public DateOnly StartDate { get; init; }
         [Display(Name = "Administrator")]

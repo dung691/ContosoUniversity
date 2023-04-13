@@ -37,20 +37,20 @@ public class Index : PageModel
     public record Result
     {
         public string? CurrentSort { get; init; }
-        public string? NameSortParm { get; init; }
-        public string? DateSortParm { get; init; }
+        public string? NameSortPram { get; init; }
+        public string? DateSortPram { get; init; }
         public string? CurrentFilter { get; init; }
         public string? SearchString { get; init; }
 
-        public PaginatedList<Model> Results { get; init; }
+        public PaginatedList<Model> Results { get; init; } = default!;
     }
 
     public record Model
     {
         public int Id { get; init; }
         [Display(Name = "First Name")]
-        public string FirstMidName { get; init; }
-        public string LastName { get; init; }
+        public string FirstMidName { get; init; } = default!;
+        public string LastName { get; init; } = default!;
         public DateOnly EnrollmentDate { get; init; }
         public int EnrollmentsCount { get; init; }
     }
@@ -100,8 +100,8 @@ public class Index : PageModel
             var model = new Result
             {
                 CurrentSort = message.SortOrder,
-                NameSortParm = string.IsNullOrEmpty(message.SortOrder) ? "name_desc" : "",
-                DateSortParm = message.SortOrder == "Date" ? "date_desc" : "Date",
+                NameSortPram = string.IsNullOrEmpty(message.SortOrder) ? "name_desc" : "",
+                DateSortPram = message.SortOrder == "Date" ? "date_desc" : "Date",
                 CurrentFilter = searchString,
                 SearchString = searchString,
                 Results = results

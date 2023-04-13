@@ -37,7 +37,7 @@ public class Details : PageModel
 
     public record Model
     {
-        public string Name { get; init; }
+        public required string Name { get; init; }
 
         public decimal Budget { get; init; }
 

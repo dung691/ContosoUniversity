@@ -61,15 +61,15 @@ public class Delete : PageModel
     {
         public int? Id { get; init; }
 
-        public string LastName { get; init; }
+        public string LastName { get; init; } = default!;
         [Display(Name = "First Name")]
-        public string FirstMidName { get; init; }
+        public string FirstMidName { get; init; } = default!;
 
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         public DateOnly? HireDate { get; init; }
 
         [Display(Name = "Location")]
-        public string OfficeAssignmentLocation { get; init; }
+        public string? OfficeAssignmentLocation { get; init; }
     }
 
     public class MappingProfile : Profile

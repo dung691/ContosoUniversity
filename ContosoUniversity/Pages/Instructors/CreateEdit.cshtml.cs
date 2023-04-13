@@ -75,9 +75,9 @@ public class CreateEdit : PageModel
     {
         public int? Id { get; init; }
 
-        public string LastName { get; init; }
+        public string LastName { get; init; } = default!;
         [Display(Name = "First Name")]
-        public string FirstMidName { get; init; }
+        public string FirstMidName { get; init; } = default!;
 
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]

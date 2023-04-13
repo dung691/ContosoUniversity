@@ -82,18 +82,16 @@ public class EditTests
         };
         await _fixture.InsertAsync(dept, newDept, course);
 
-        Edit.Command command = default;
+        var command = new Edit.Command
+        {
+            Id = course.Id,
+            Credits = 5,
+            Title = "English 202",
+            DepartmentId = newDept.Id
+        };
 
         await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
         {
-            command = new Edit.Command
-            {
-                Id = course.Id,
-                Credits = 5,
-                Title = "English 202",
-                DepartmentId = newDept.Id
-            };
-
             await mediator.Send(command);
         });
 

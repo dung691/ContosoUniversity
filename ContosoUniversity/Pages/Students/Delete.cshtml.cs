@@ -50,8 +50,8 @@ public class Delete : PageModel
     {
         public int Id { get; init; }
         [Display(Name = "First Name")]
-        public string FirstMidName { get; init; }
-        public string LastName { get; init; }
+        public string FirstMidName { get; init; } = default!;
+        public string LastName { get; init; } = default!;
         public DateOnly EnrollmentDate { get; init; }
     }
 

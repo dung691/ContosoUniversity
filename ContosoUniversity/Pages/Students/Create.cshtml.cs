@@ -32,10 +32,10 @@ public class Create : PageModel
 
     public record Command : IRequest<int>
     {
-        public string LastName { get; init; }
+        public string LastName { get; init; } = default!;
 
         [Display(Name = "First Name")]
-        public string FirstMidName { get; init; }
+        public string FirstMidName { get; init; } = default!;
 
         [DataType(DataType.Date)]
         public DateOnly? EnrollmentDate { get; init; }

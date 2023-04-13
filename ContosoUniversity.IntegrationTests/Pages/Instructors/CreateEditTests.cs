@@ -52,7 +52,7 @@ public class CreateEditTests
         var created = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == id)
             .Include(i => i.Courses).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
-        created.FirstMidName.ShouldBe(command.FirstMidName);
+        created!.FirstMidName.ShouldBe(command.FirstMidName);
         created.LastName.ShouldBe(command.LastName);
         created.HireDate.ShouldBe(command.HireDate.GetValueOrDefault());
         created.OfficeAssignment.ShouldNotBeNull();
@@ -108,7 +108,7 @@ public class CreateEditTests
         var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId)
             .Include(i => i.Courses).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
-        edited.FirstMidName.ShouldBe(command.FirstMidName);
+        edited!.FirstMidName.ShouldBe(command.FirstMidName);
         edited.LastName.ShouldBe(command.LastName);
         edited.HireDate.ShouldBe(command.HireDate.GetValueOrDefault());
         edited.OfficeAssignment.ShouldNotBeNull();
@@ -163,7 +163,7 @@ public class CreateEditTests
         var edited = await _fixture.ExecuteDbContextAsync(db => db.Instructors.Where(i => i.Id == instructorId)
             .Include(i => i.Courses).Include(i => i.OfficeAssignment).SingleOrDefaultAsync());
 
-        edited.FirstMidName.ShouldBe(command.FirstMidName);
+        edited!.FirstMidName.ShouldBe(command.FirstMidName);
         edited.LastName.ShouldBe(command.LastName);
         edited.HireDate.ShouldBe(command.HireDate.GetValueOrDefault());
         edited.OfficeAssignment.ShouldNotBeNull();

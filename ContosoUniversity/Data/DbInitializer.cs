@@ -214,7 +214,7 @@ public static class DbInitializer
         foreach (Enrollment e in enrollments)
         {
             var enrollmentInDataBase = context.Enrollments
-                .SingleOrDefault(s => s.Student.Id == e.StudentId && s.Course.Id == e.CourseId);
+                .SingleOrDefault(s => s.StudentId == e.StudentId && s.CourseId == e.CourseId);
             if (enrollmentInDataBase == null)
             {
                 context.Enrollments.Add(e);

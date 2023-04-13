@@ -39,7 +39,8 @@ public class Edit : PageModel
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data, cancellationToken);
+            var updatedId = await _mediator.Send(Data, cancellationToken);
+            if (updatedId is null) return NotFound();
             return RedirectToPage(nameof(System.Index));
         }
 
@@ -77,7 +78,7 @@ public class Edit : PageModel
                 .SingleOrDefaultAsync(token);
     }
 
-    public record Command : IRequest
+    public record Command : IRequest<int?>
     {
         [Display(Name = "Number")]
         public int Id { get; init; }
@@ -102,19 +103,23 @@ public class Edit : PageModel
         }
     }
 
-    public class CommandHandler : IRequestHandler<Command>
+    public class CommandHandler : IRequestHandler<Command, int?>
     {
         private readonly SchoolContext _db;
 
         public CommandHandler(SchoolContext db) => _db = db;
 
-        public async Task Handle(Command request, CancellationToken cancellationToken)
+        public async Task<int?> Handle(Command request, CancellationToken cancellationToken)
         {
             var course = await _db.Courses.FindAsync(new object?[]{ request.Id }, cancellationToken);
+
+            if (course is null) return default;
 
             course.Title = request.Title;
             course.DepartmentId = request.DepartmentId;
             course.Credits = request.Credits!.Value;
+
+            return course.Id;
         }
     }
 }

@@ -88,17 +88,17 @@ public class Index : PageModel
             public int Id { get; init; }
 
             [Display(Name = "Last Name")]
-            public string LastName { get; init; }
+            public string LastName { get; init; } = default!;
 
             [Display(Name = "First Name")]
-            public string FirstMidName { get; init; }
+            public string FirstMidName { get; init; } = default!;
 
             [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
             [Display(Name = "Hire Date")]
             public DateOnly HireDate { get; init; }
 
             [DisplayName("Office")]
-            public string OfficeAssignmentLocation { get; init; }
+            public string? OfficeAssignmentLocation { get; init; }
             [DisplayName("Courses")]
             public IEnumerable<CourseAssignment> Courses { get; init; } = Enumerable.Empty<CourseAssignment>();
         }
@@ -106,16 +106,16 @@ public class Index : PageModel
         public record CourseAssignment
         {
             public int CourseId { get; init; }
-            public string CourseTitle { get; init; }
+            public string CourseTitle { get; init; } = default!;
         }
 
         public record Course
         {
             [DisplayName("Number")]
             public int Id { get; init; }
-            public string Title { get; init; }
+            public string Title { get; init; } = default!;
             [DisplayName("Department")]
-            public string DepartmentName { get; init; }
+            public string? DepartmentName { get; init; }
         }
 
         public record Enrollment
@@ -123,7 +123,7 @@ public class Index : PageModel
             [DisplayFormat(NullDisplayText = "No grade")]
             public Grade? Grade { get; init; }
             [DisplayName("Name")]
-            public string StudentFullName { get; init; }
+            public string StudentFullName { get; init; } = default!;
         }
     }
 

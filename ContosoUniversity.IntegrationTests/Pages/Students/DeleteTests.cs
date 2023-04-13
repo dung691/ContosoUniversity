@@ -31,7 +31,7 @@ public class DeleteTests
 
         var result = await _fixture.SendAsync(query);
 
-        result.FirstMidName.ShouldBe(cmd.FirstMidName);
+        result!.FirstMidName.ShouldBe(cmd.FirstMidName);
         result.LastName.ShouldBe(cmd.LastName);
         result.EnrollmentDate.ShouldBe(cmd.EnrollmentDate.GetValueOrDefault());
     }

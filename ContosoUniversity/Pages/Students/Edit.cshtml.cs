@@ -36,7 +36,8 @@ public class Edit : PageModel
     {
         if (ModelState.IsValid)
         {
-            await _mediator.Send(Data, cancellationToken);
+            var updatedId = await _mediator.Send(Data, cancellationToken);
+            if (updatedId is null) return NotFound();
             return RedirectToPage(nameof(Index));
         }
 
@@ -56,13 +57,13 @@ public class Edit : PageModel
         }
     }
 
-    public record Command : IRequest
+    public record Command : IRequest<int?>
     {
         public int Id { get; init; }
-        public string LastName { get; init; }
+        public required string LastName { get; init; }
 
         [Display(Name = "First Name")]
-        public string FirstMidName { get; init; }
+        public required string FirstMidName { get; init; }
         [DataType(DataType.Date)]
         public DateOnly? EnrollmentDate { get; init; }
     }
@@ -99,19 +100,23 @@ public class Edit : PageModel
             .SingleOrDefaultAsync(token);
     }
 
-    public class CommandHandler : IRequestHandler<Command>
+    public class CommandHandler : IRequestHandler<Command, int?>
     {
         private readonly SchoolContext _db;
 
         public CommandHandler(SchoolContext db) => _db = db;
 
-        public async Task Handle(Command message, CancellationToken token)
+        public async Task<int?> Handle(Command message, CancellationToken token)
         {
             var student = await _db.Students.FindAsync(new object?[] { message.Id }, token);
+
+            if (student is null) return default;
 
             student.FirstMidName = message.FirstMidName;
             student.LastName = message.LastName;
             student.EnrollmentDate = message.EnrollmentDate!.Value;
+
+            return student.Id;
         }
     }
 }

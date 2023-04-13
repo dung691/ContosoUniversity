@@ -71,7 +71,7 @@ public class EditTests
         };
         await _fixture.InsertAsync(dept);
 
-        Edit.Command command = null;
+        Edit.Command command = default!;
         await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
         {
             var admin2 = await _fixture.FindAsync<Instructor>(admin2Id);
@@ -90,8 +90,8 @@ public class EditTests
 
         var result = await _fixture.ExecuteDbContextAsync(db => db.Departments.Where(d => d.Id == dept.Id).Include(d => d.Administrator).SingleOrDefaultAsync());
 
-        result.Name.ShouldBe(command.Name);
-        result.Administrator.Id.ShouldBe(command.InstructorId);
+        result!.Name.ShouldBe(command!.Name);
+        result.Administrator!.Id.ShouldBe(command.InstructorId);
         result.StartDate.ShouldBe(command.StartDate.GetValueOrDefault());
         result.Budget.ShouldBe(command.Budget.GetValueOrDefault());
     }

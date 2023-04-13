@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Respawn;
 using Xunit;
 
 namespace ContosoUniversity.IntegrationTests;
@@ -14,8 +13,6 @@ public class SliceFixtureCollection : ICollectionFixture<SliceFixture> { }
 
 public class SliceFixture : IAsyncLifetime
 {
-    private Respawner _respawner;
-    private readonly IConfiguration _configuration;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly WebApplicationFactory<Program> _factory;
 
@@ -23,12 +20,10 @@ public class SliceFixture : IAsyncLifetime
     {
         _factory = new ContosoTestApplicationFactory();
 
-        _configuration = _factory.Services.GetRequiredService<IConfiguration>();
         _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
     }
 
-    class ContosoTestApplicationFactory 
-        : WebApplicationFactory<Program>
+    class ContosoTestApplicationFactory : WebApplicationFactory<Program>
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -41,7 +36,7 @@ public class SliceFixture : IAsyncLifetime
             });
         }
 
-        private readonly string _connectionString = "Server=(localdb)\\mssqllocaldb;Database=ContosoUniversityDotNetCore-Pages-Test;Trusted_Connection=True;MultipleActiveResultSets=true";
+        private readonly string _connectionString = "Server=.;Database=ContosoUniversityDotNetCore-Pages-Tests;User Id=sa;Password=123@123a;Encrypt=False;";
     }
 
     public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
@@ -59,7 +54,7 @@ public class SliceFixture : IAsyncLifetime
         }
         catch (Exception)
         {
-            dbContext.RollbackTransaction(); 
+            dbContext.RollbackTransaction();
             throw;
         }
     }
@@ -86,23 +81,23 @@ public class SliceFixture : IAsyncLifetime
         }
     }
 
-    public Task ExecuteDbContextAsync(Func<SchoolContext, Task> action) 
-        => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
+    public Task ExecuteDbContextAsync(Func<SchoolContext, Task> action)
+        => ExecuteScopeAsync(sp => action(sp.GetRequiredService<SchoolContext>()));
 
-    public Task ExecuteDbContextAsync(Func<SchoolContext, ValueTask> action) 
-        => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()).AsTask());
+    public Task ExecuteDbContextAsync(Func<SchoolContext, ValueTask> action)
+        => ExecuteScopeAsync(sp => action(sp.GetRequiredService<SchoolContext>()).AsTask());
 
-    public Task ExecuteDbContextAsync(Func<SchoolContext, IMediator, Task> action) 
-        => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
+    public Task ExecuteDbContextAsync(Func<SchoolContext, IMediator, Task> action)
+        => ExecuteScopeAsync(sp => action(sp.GetRequiredService<SchoolContext>(), sp.GetRequiredService<IMediator>()));
 
-    public Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, Task<T>> action) 
-        => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()));
+    public Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, Task<T>> action)
+        => ExecuteScopeAsync(sp => action(sp.GetRequiredService<SchoolContext>()));
 
-    public Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, ValueTask<T>> action) 
-        => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>()).AsTask());
+    public Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, ValueTask<T>> action)
+        => ExecuteScopeAsync(sp => action(sp.GetRequiredService<SchoolContext>()).AsTask());
 
-    public Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, IMediator, Task<T>> action) 
-        => ExecuteScopeAsync(sp => action(sp.GetService<SchoolContext>(), sp.GetService<IMediator>()));
+    public Task<T> ExecuteDbContextAsync<T>(Func<SchoolContext, IMediator, Task<T>> action)
+        => ExecuteScopeAsync(sp => action(sp.GetRequiredService<SchoolContext>(), sp.GetRequiredService<IMediator>()));
 
     public Task InsertAsync<T>(params T[] entities) where T : class
     {
@@ -126,7 +121,7 @@ public class SliceFixture : IAsyncLifetime
         });
     }
 
-    public Task InsertAsync<TEntity, TEntity2>(TEntity entity, TEntity2 entity2) 
+    public Task InsertAsync<TEntity, TEntity2>(TEntity entity, TEntity2 entity2)
         where TEntity : class
         where TEntity2 : class
     {
@@ -139,7 +134,7 @@ public class SliceFixture : IAsyncLifetime
         });
     }
 
-    public Task InsertAsync<TEntity, TEntity2, TEntity3>(TEntity entity, TEntity2 entity2, TEntity3 entity3) 
+    public Task InsertAsync<TEntity, TEntity2, TEntity3>(TEntity entity, TEntity2 entity2, TEntity3 entity3)
         where TEntity : class
         where TEntity2 : class
         where TEntity3 : class
@@ -154,7 +149,7 @@ public class SliceFixture : IAsyncLifetime
         });
     }
 
-    public Task InsertAsync<TEntity, TEntity2, TEntity3, TEntity4>(TEntity entity, TEntity2 entity2, TEntity3 entity3, TEntity4 entity4) 
+    public Task InsertAsync<TEntity, TEntity2, TEntity3, TEntity4>(TEntity entity, TEntity2 entity2, TEntity3 entity3, TEntity4 entity4)
         where TEntity : class
         where TEntity2 : class
         where TEntity3 : class
@@ -171,7 +166,8 @@ public class SliceFixture : IAsyncLifetime
         });
     }
 
-    public Task<T> FindAsync<T>(int id) where T : class
+    public Task<T> FindAsync<T>(int id)
+        where T : class
     {
         return ExecuteDbContextAsync(db => db.Set<T>().FindAsync(id).AsTask());
     }
@@ -202,16 +198,16 @@ public class SliceFixture : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var connectionString = _configuration.GetConnectionString("DefaultConnection");
-        
-        _respawner = await Respawner.CreateAsync(connectionString);
-
-        await _respawner.ResetAsync(connectionString);
+        using var scope = _scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<SchoolContext>();
+        await dbContext.Database.EnsureCreatedAsync();
     }
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
-        _factory?.Dispose();
-        return Task.CompletedTask;
+        using var scope = _scopeFactory.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<SchoolContext>();
+        await dbContext.Database.EnsureDeletedAsync();
+        await _factory.DisposeAsync().AsTask();
     }
 }

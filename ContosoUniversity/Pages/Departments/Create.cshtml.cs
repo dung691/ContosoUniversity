@@ -44,7 +44,7 @@ public class Create : PageModel
 
     public record Command : IRequest<int>
     {
-        public string Name { get; init; }
+        public required string Name { get; init; }
 
         [DataType(DataType.Currency)]
         [Column(TypeName = "money")]

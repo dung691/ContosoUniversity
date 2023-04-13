@@ -24,7 +24,7 @@ public class CreateTests
             HireDate = DateOnly.FromDateTime(DateTime.Today)
         });
 
-        Create.Command command = null;
+        Create.Command command = default!;
 
         await _fixture.ExecuteDbContextAsync(async (db, mediator) =>
         {
@@ -35,7 +35,7 @@ public class CreateTests
                 Budget = 10m,
                 Name = "Engineering",
                 StartDate = DateOnly.FromDateTime(DateTime.Now.Date),
-                InstructorId = admin.Id
+                InstructorId = admin!.Id
             };
 
             await mediator.Send(command);
