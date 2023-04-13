@@ -48,7 +48,7 @@ jobs:
       run: dotnet build -c Release --no-restore -p:BuildNumber=$BUILD_NUMBER -p:SourceRevisionId=$GITHUB_SHA -p:ContinuousIntegrationBuild=true
 
       env:
-        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
+        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=3uuiCaKxfbForrK;TrustServerCertificate=True;Encrypt=false;
 
     - name: Test
       run: dotnet test -c Release --no-restore --no-build
