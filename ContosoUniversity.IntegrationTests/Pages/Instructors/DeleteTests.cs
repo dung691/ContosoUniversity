@@ -94,7 +94,10 @@ public class DeleteTests
 
         englishDept!.InstructorId.ShouldBeNull();
 
-        var courseInstructorCount = await _fixture.ExecuteDbContextAsync(db => db.Courses.Where(ci => ci.Id == english101.Id).Include(ci => ci.Instructors).Select(r => r.Instructors).CountAsync());
+        var courseInstructorCount = await _fixture.ExecuteDbContextAsync(db => db.Courses.Where(ci => ci.Id == english101.Id)
+            .Include(ci => ci.Instructors)
+            .Where(r => r.Instructors.Any(x => x.Id == instructorId))
+            .CountAsync());
 
         courseInstructorCount.ShouldBe(0);
     }

@@ -37,14 +37,14 @@ public class Details : PageModel
     {
         public int Id { get; init; }
         [Display(Name = "First Name")]
-        public required string FirstMidName { get; init; }
-        public required string LastName { get; init; }
+        public string FirstMidName { get; init; } = default!;
+        public string LastName { get; init; } = default!;
         public DateOnly EnrollmentDate { get; init; }
         public List<Enrollment> Enrollments { get; init; } = new();
 
         public record Enrollment
         {
-            public required string CourseTitle { get; init; }
+            public string CourseTitle { get; init; } = default!;
             public Grade? Grade { get; init; }
         }
     }

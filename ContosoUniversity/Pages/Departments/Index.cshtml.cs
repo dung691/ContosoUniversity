@@ -25,7 +25,7 @@ public class Index : PageModel
 
     public record Model
     {
-        public required string Name { get; init; }
+        public string Name { get; init; } = default!;
 
         public decimal Budget { get; init; }
 

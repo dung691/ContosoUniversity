@@ -19,7 +19,6 @@ public class SliceFixture : IAsyncLifetime
     public SliceFixture()
     {
         _factory = new ContosoTestApplicationFactory();
-
         _scopeFactory = _factory.Services.GetRequiredService<IServiceScopeFactory>();
     }
 
@@ -29,9 +28,9 @@ public class SliceFixture : IAsyncLifetime
         {
             builder.ConfigureAppConfiguration((_, configBuilder) =>
             {
-                configBuilder.AddInMemoryCollection(new Dictionary<string, string>
+                configBuilder.AddInMemoryCollection(new[]
                 {
-                    {"ConnectionStrings:DefaultConnection", _connectionString}
+                    new KeyValuePair<string, string?>("ConnectionStrings:SchoolContext", _connectionString)
                 });
             });
         }

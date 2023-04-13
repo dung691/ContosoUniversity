@@ -51,7 +51,7 @@ public class Edit : PageModel
 
     public record Command : IRequest<int?>
     {
-        public required string Name { get; init; }
+        public string Name { get; init; } = default!;
 
         public decimal? Budget { get; init; }
 

@@ -60,7 +60,7 @@ public class Edit : PageModel
     public record Command : IRequest<int?>
     {
         public int Id { get; init; }
-        public required string LastName { get; init; }
+        public string LastName { get; init; } = default!;
 
         [Display(Name = "First Name")]
         public required string FirstMidName { get; init; }

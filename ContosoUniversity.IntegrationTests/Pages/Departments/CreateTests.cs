@@ -33,7 +33,7 @@ public class CreateTests
             command = new Create.Command
             {
                 Budget = 10m,
-                Name = "Engineering",
+                Name = "EngineeringTest",
                 StartDate = DateOnly.FromDateTime(DateTime.Now.Date),
                 InstructorId = admin!.Id
             };

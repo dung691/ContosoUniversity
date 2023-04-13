@@ -32,17 +32,19 @@ public class CreateTests
             StartDate = DateOnly.FromDateTime(DateTime.Today)
         };
 
-        var command = new Create.Command
-        {
-            Credits = 4,
-            DepartmentId = dept.Id,
-            Number = _fixture.NextCourseNumber(),
-            Title = "English 101"
-        };
+        await _fixture.InsertAsync(dept);
 
-        await _fixture.ExecuteDbContextAsync(async (ctxt, mediator) =>
+        Create.Command command = default!;
+
+        await _fixture.ExecuteDbContextAsync(async (context, mediator) =>
         {
-            await ctxt.Departments.AddAsync(dept);
+            command = new Create.Command
+            {
+                Credits = 4,
+                DepartmentId = dept.Id,
+                Number = _fixture.NextCourseNumber(),
+                Title = "English 101"
+            };
             await mediator.Send(command);
         });
 

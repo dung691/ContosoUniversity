@@ -112,13 +112,10 @@ public class Delete : PageModel
 
             _db.Instructors.Remove(instructor);
 
-            var department = await _db.Departments
+            var departments = await _db.Departments
                 .Where(d => d.InstructorId == message.Id)
-                .SingleOrDefaultAsync(token);
-            if (department != null)
-            {
-                department.InstructorId = null;
-            }
+                .ToListAsync(cancellationToken: token);
+            departments.ForEach(d => d.InstructorId = null);
         }
     }
 }
