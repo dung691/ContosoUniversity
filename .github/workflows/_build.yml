@@ -24,7 +24,7 @@ jobs:
           - 1433:1433
         env:
           ACCEPT_EULA: Y
-          SA_PASSWORD: 3uuiCaKxfbForrK
+          SA_PASSWORD: sqlPw3$secure
 
     steps:
     - uses: actions/checkout@v3
@@ -43,12 +43,9 @@ jobs:
         buildNumber=$now.$GITHUB_RUN_NUMBER
         echo "BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
         echo "$buildNumber"
-
-    - name: Build
-      run: dotnet build -c Release --no-restore -p:BuildNumber=$BUILD_NUMBER -p:SourceRevisionId=$GITHUB_SHA -p:ContinuousIntegrationBuild=true
-
+        
       env:
-        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=3uuiCaKxfbForrK;TrustServerCertificate=True;Encrypt=false;
+        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
 
     - name: Test
       run: dotnet test -c Release --no-restore --no-build
