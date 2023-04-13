@@ -1,0 +1,61 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      versionSuffix:
+        required: false
+        type: string
+        default: ci
+      packShipCandidate:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build package
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+          - 1433:1433
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: 3uuiCaKxfbForrK
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+    
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Create build number
+      run: |
+        now=$(date +'%Y%m%d')
+        buildNumber=$now.$GITHUB_RUN_NUMBER
+        echo "BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
+        echo "$buildNumber"
+
+    - name: Build
+      run: dotnet build -c Release --no-restore -p:BuildNumber=$BUILD_NUMBER -p:SourceRevisionId=$GITHUB_SHA -p:ContinuousIntegrationBuild=true
+
+      env:
+        ConnectionStrings:SchoolContext: Server=localhost;Database=ContosoUniversity-Tests;User Id=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
+
+    - name: Test
+      run: dotnet test -c Release --no-restore --no-build
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: test-results
+        path: artifacts/TestResults
+        retention-days: 5

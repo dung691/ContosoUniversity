@@ -1,7 +1,7 @@
-name: CI (main)
+name: PRs
 
 on:
-  push:
+  pull_request:
     branches: [main]
     paths-ignore:
       - "**/*.md"
@@ -10,10 +10,7 @@ on:
 
   workflow_dispatch:
 
-
 jobs:
   build:
-    name: Build & Test
+    name: Build & Test PR
     uses: ./.github/workflows/_build.yml
-    with:
-      packShipCandidate: true
