@@ -13,12 +13,12 @@ public class SchoolContext : DbContext
     {
     }
 
-    public DbSet<Course> Courses { get; set; }
-    public DbSet<Enrollment> Enrollments { get; set; }
-    public DbSet<Student> Students { get; set; }
-    public DbSet<Department> Departments { get; set; }
-    public DbSet<Instructor> Instructors { get; set; }
-    public DbSet<OfficeAssignment> OfficeAssignments { get; set; }
+    public DbSet<Course> Courses => Set<Course>();
+    public DbSet<Enrollment> Enrollments => Set<Enrollment>();
+    public DbSet<Student> Students => Set<Student>();
+    public DbSet<Department> Departments => Set<Department>();
+    public DbSet<Instructor> Instructors => Set<Instructor>();
+    public DbSet<OfficeAssignment> OfficeAssignments => Set<OfficeAssignment>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
