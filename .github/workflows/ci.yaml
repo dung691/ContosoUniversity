@@ -2,10 +2,6 @@ name: CI
 
 on: [push, pull_request]
 
-env:
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_NOLOGO: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
