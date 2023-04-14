@@ -1,21 +1,7 @@
 name: CI
 
-on:
-  push:
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.gitignore"
-      - "**/*.gitattributes"
-    
-  pull_request:
-    paths-ignore:
-      - "**/*.md"
-      - "**/*.gitignore"
-      - "**/*.gitattributes"
+on: [push, pull_request]
 
-concurrency:
-  group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_NOLOGO: true
@@ -23,8 +9,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build & Test
-
+    
     services:
       sqlserver:
         image: mcr.microsoft.com/mssql/server:2022-latest
@@ -37,36 +22,15 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Cache NuGet Packages
-      uses: actions/cache@v3
-      with:
-        path: ${{ github.workspace }}/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
-
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
 
-    - name: dotnet tool restore
-      run: dotnet tool restore
-
-    - name: dotnet restore
-      run: dotnet restore
-
-    - name: Create build number
-      run: |
-        now=$(date +'%Y%m%d')
-        buildNumber=$now.$GITHUB_RUN_NUMBER
-        echo "BUILD_NUMBER=$buildNumber" >> $GITHUB_ENV
-        echo "$buildNumber"
-
     - name: dotnet build
-      run: dotnet build --configuration Release --no-restore -p:BuildNumber=$BUILD_NUMBER -p:SourceRevisionId=$GITHUB_SHA -p:ContinuousIntegrationBuild=true
+      run: dotnet build -c Release
 
     - name: dotnet test
-      run: dotnet test -c Release --no-restore --no-build
+      run: dotnet test -c Release --no-build
       env:
         ConnectionStrings__SchoolContext: Server=.;Database=ContosoUniversity-Tests;User=sa;Password=sqlPw3$secure;TrustServerCertificate=True;Encrypt=false;
