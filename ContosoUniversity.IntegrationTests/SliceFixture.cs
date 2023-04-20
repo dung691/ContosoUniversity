@@ -1,4 +1,5 @@
 ﻿using ContosoUniversity.Data;
+using ContosoUniversity.IntegrationTests.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -26,6 +27,15 @@ public class SliceFixture : IAsyncLifetime
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            builder.ConfigureServices(services =>
+            {
+                services.AddAntiforgery(t =>
+                {
+                    t.Cookie.Name = AntiForgeryTokenExtractor.AntiForgeryCookieName;
+                    t.FormFieldName = AntiForgeryTokenExtractor.AntiForgeryFieldName;
+                });
+            });
+
             builder.ConfigureAppConfiguration(configurationBuilder =>
             {
                 var integrationConfig = new ConfigurationBuilder()
@@ -37,6 +47,8 @@ public class SliceFixture : IAsyncLifetime
             });
         }
     }
+
+    public WebApplicationFactory<Program> Factory => _factory;
 
     public async Task ExecuteScopeAsync(Func<IServiceProvider, Task> action)
     {
