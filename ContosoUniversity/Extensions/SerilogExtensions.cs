@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using Serilog.Exceptions;
+using Serilog.Settings.Configuration;
 
 namespace ContosoUniversity.Extensions;
 
@@ -13,7 +14,7 @@ public static class SerilogExtensions
         builder.Host.UseSerilog((context, loggerConfiguration) =>
         {
             // https://github.com/serilog/serilog-settings-configuration
-            loggerConfiguration.ReadFrom.Configuration(context.Configuration, sectionName: sectionName);
+            loggerConfiguration.ReadFrom.Configuration(context.Configuration, new ConfigurationReaderOptions { SectionName = sectionName });
 
             loggerConfiguration
                 .Enrich.WithProperty("Application", builder.Environment.ApplicationName)
